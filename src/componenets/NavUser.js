@@ -40,9 +40,8 @@ function NavUser() {
               <p className="font-semibold">Signed in as</p>
               <p className="font-semibold">maka@example.com</p>
             </DropdownItem>
-            <DropdownItem key="settings">My Settings</DropdownItem>
-            <DropdownItem key="analytics">Analytics</DropdownItem>
-            <DropdownItem key="configurations">Configurations</DropdownItem>
+            <DropdownItem key="treasure" href="/home">Treasure</DropdownItem>
+            <DropdownItem key="profile" href="/profile">Profile</DropdownItem>
             <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
             <DropdownItem key="logout" color="danger">
               Log Out

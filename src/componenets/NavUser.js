@@ -15,7 +15,7 @@ import Maka from "../images/frerein.jpg";
 
 function NavUser() {
   return (
-    <Navbar>
+    <Navbar maxWidth="full">
       <NavbarBrand>
         <Logo />
         <Spacer />
@@ -36,7 +36,7 @@ function NavUser() {
             />
           </DropdownTrigger>
           <DropdownMenu aria-label="Profile Actions" variant="flat">
-            <DropdownItem key="profile" className="h-14 gap-2">
+            <DropdownItem key="profile" isDisabled className="h-14 gap-2">
               <p className="font-semibold">Signed in as</p>
               <p className="font-semibold">maka@example.com</p>
             </DropdownItem>

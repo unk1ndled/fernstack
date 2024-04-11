@@ -9,6 +9,7 @@ import { createGlobalStyle } from "styled-components";
 import Test from "./pages/Home";
 import { NextUIProvider } from "@nextui-org/react";
 import useDarkMode from "use-dark-mode";
+import Profile from "./pages/Profile";
 
 const App = () => {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ const App = () => {
     <NextUIProvider navigate={navigate}>
       <Routes>
         <Route path="/home" element={<Test />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </NextUIProvider>
   );

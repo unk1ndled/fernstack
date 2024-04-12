@@ -37,27 +37,16 @@ const Test = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const location = useLocation();
-  const user = useAuth();
+  const { currentUser } = useAuth();
 
   const folder_ = location.state != null ? location.state : null;
   const id_ = folder_ != null ? folder_.folder.id : null;
   const currentFolder = useFolder(id_, folder_);
   const folder = currentFolder.folder;
 
-  console.log(currentFolder);
-  console.log(folder);
+  //console.log(currentFolder);
 
   const list = [
-    {
-      title: "frerein",
-      img: Frerein,
-      size: "1mb",
-    },
-    {
-      title: "frerein",
-      img: Frerein,
-      size: "1mb",
-    },
     {
       title: "frerein",
       img: Frerein,
@@ -80,6 +69,8 @@ const Test = () => {
     onOpen();
     setLoading(true);
   };
+
+  console.log(currentUser);
 
   return (
     <div>

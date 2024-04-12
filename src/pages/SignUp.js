@@ -14,6 +14,7 @@ const SignUp = () => {
   const toggleVisibility = () => setIsVisible(!isVisible);
   const navigate = useNavigate();
 
+  const usernameRef = useRef();
   const emailRef = useRef();
   const passwordRef = useRef();
   const passwordConfirmedRef = useRef();
@@ -30,9 +31,15 @@ const SignUp = () => {
     }
     try {
       setError();
-      await signup(emailRef.current.value, passwordRef.current.value);
+      await signup(
+        emailRef.current.value,
+        passwordRef.current.value,
+        usernameRef.current.value,
+        "9999"
+      );
+      navigate("/treasure");
     } catch (error) {
-      alert("An error occurred while creating your account.")
+      alert("An error occurred while creating your account.");
       setError(error.code);
     }
   }
@@ -41,7 +48,7 @@ const SignUp = () => {
     try {
       setError();
       await signInWithGoogle();
-      navigate("/home");
+      navigate("/treasure");
     } catch (e) {
       setError("An error occurred while creating your account.");
       console.log(e);
@@ -69,11 +76,18 @@ const SignUp = () => {
             Register
           </p>
           <Input
+            label="Username"
+            variant="bordered"
+            placeholder="Enter your email"
+            className="w-2/3 "
+            ref={usernameRef}
+          />
+          <Input
             type="email"
             label="Email"
             variant="bordered"
             placeholder="Enter your email"
-            className="w-2/3 mt-8 "
+            className="w-2/3  "
             isInvalid={error ? true : false}
             ref={emailRef}
           />
@@ -143,7 +157,11 @@ const SignUp = () => {
             Register
           </Button>
 
-          <Link to="/login" style={{ color: "#9455d3" }} className=" text-blue-600 ">
+          <Link
+            to="/login"
+            style={{ color: "#9455d3" }}
+            className=" text-blue-600 "
+          >
             Nah i'm good😎
           </Link>
 

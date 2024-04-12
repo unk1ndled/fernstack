@@ -5,6 +5,7 @@ import {
   signInWithPopup,
   signInWithEmailAndPassword,
   signOut,
+  updateProfile,
 } from "firebase/auth";
 
 const AuthContext = React.createContext();
@@ -13,11 +14,27 @@ export function useAuth() {
   return useContext(AuthContext);
 }
 
+const str = 999;
+
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState();
 
-  function signup(email, password) {
-    return createUserWithEmailAndPassword(auth, email, password);
+  async function signup(email, password, username) {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      await updateProfile(userCredential.user, {
+        displayName: username,
+        storageUsage: str,
+      });
+      return userCredential.user;
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   function login(email, password) {
@@ -39,7 +56,15 @@ export function AuthProvider({ children }) {
     return unsubscribe;
   }, []);
 
-  const value = { currentUser, signup, signInWithGoogle, login, logout };
+  const { uid, displayName, email, photoURL, storageUsage } = currentUser || {};
+
+  const value = {
+    currentUser: { uid, displayName, email, photoURL, storageUsage },
+    signup,
+    signInWithGoogle,
+    login,
+    logout,
+  };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

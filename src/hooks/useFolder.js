@@ -90,7 +90,7 @@ export function useFolder(folderId = null, folder = null) {
         payload: { childFolders: querySnapshot.docs.map(database.formatDoc) },
       });
     };
-    if (currentUser !== undefined) {
+    if (currentUser && currentUser.uid) {
       setChildren();
     }
   }, [folderId, currentUser]);

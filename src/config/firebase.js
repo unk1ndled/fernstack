@@ -33,6 +33,7 @@ export const database = {
   getFolderRef: async (id) => {
     return doc(db, "folders", id);
   },
+
   getCurrTime: serverTimestamp,
   formatDoc: (doc) => {
     return { id: doc.id, ...doc.data() };

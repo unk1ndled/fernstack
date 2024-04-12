@@ -6,6 +6,7 @@ import {
   collection,
   doc,
   serverTimestamp,
+  addDoc,
 } from "firebase/firestore";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
@@ -37,6 +38,14 @@ export const database = {
   getCurrTime: serverTimestamp,
   formatDoc: (doc) => {
     return { id: doc.id, ...doc.data() };
+  },
+  initialiseRoot: async (id) => {
+    await addDoc(database.folders, {
+      name: "Root",
+      userId: id,
+      usedStr: 0,
+      createdAt: database.getCurrTime(),
+    });
   },
 };
 

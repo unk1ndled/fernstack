@@ -58,6 +58,12 @@ const Login = () => {
 
         <Divider orientation="vertical"></Divider>
         <div className="flex items-center flex-col w-1/2 h-full ml- mt-12 gap-8 ">
+          <p
+            className="  text-4xl font-semibold -mt-16"
+            style={{ color: "#9455d3" }}
+          >
+            Login page
+          </p>
           <Input
             type="email"
             label="Email"

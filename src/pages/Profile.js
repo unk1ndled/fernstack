@@ -5,6 +5,7 @@ import Pfp from "../images/frerein.jpg";
 import { useAuth } from "../contexts/AuthContext";
 
 const Profile = () => {
+  const { currentUser } = useAuth();
   return (
     <div className=" flex flex-col items-center">
       <NavUser></NavUser>
@@ -18,7 +19,9 @@ const Profile = () => {
               isPressable
               radius="full"
               className=" h-80  object-cover"
-              src={Pfp}
+              src={
+                currentUser && currentUser.photoURL ? currentUser.photoURL : Pfp
+              }
             />
           </Tooltip>
           <Spacer y={3} />
@@ -28,8 +31,7 @@ const Profile = () => {
               isPressable
               className=" text-secondary flex flex-col items-center p-2"
             >
-              <div>Mohammed Amine </div>
-              <div>Salmane </div>
+              <div>{currentUser.displayName}</div>
             </Card>
           </Tooltip>
         </div>

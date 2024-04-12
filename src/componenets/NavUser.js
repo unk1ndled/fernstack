@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 function NavUser() {
   const navigate = useNavigate();
 
-  const { logout } = useAuth();
+  const { currentUser, logout } = useAuth();
   async function handleLogout() {
     try {
       await logout();
@@ -45,13 +45,19 @@ function NavUser() {
               color="secondary"
               name="Jason Hughes"
               size="sm"
-              src={Maka}
+              src={
+                currentUser && currentUser.photoURL
+                  ? currentUser.photoURL
+                  : Maka
+              }
             />
           </DropdownTrigger>
           <DropdownMenu aria-label="Profile Actions" variant="flat">
             <DropdownItem key="profile" isDisabled className="h-14 gap-2">
               <p className="font-semibold">Signed in as</p>
-              <p className="font-semibold">maka@example.com</p>
+              {currentUser && currentUser.email && (
+                <p className="font-semibold">{currentUser.email}</p>
+              )}
             </DropdownItem>
             <DropdownItem key="treasure" href="/treasure">
               Treasure

@@ -35,23 +35,14 @@ const Test = () => {
 
   const user = useAuth();
   console.log(user.currentUser);
+  const location = useLocation();
+  const { currentUser } = useAuth();
 
   const { state: folder_ } = useLocation();
   const id_ = folder_ != null ? folder_.folder.id : null;
   const currentFolder = useFolder(id_, folder_);
   const folder = currentFolder.folder;
-
   const list = [
-    {
-      title: "frerein",
-      img: Frerein,
-      size: "1mb",
-    },
-    {
-      title: "frerein",
-      img: Frerein,
-      size: "1mb",
-    },
     {
       title: "frerein",
       img: Frerein,
@@ -62,26 +53,20 @@ const Test = () => {
       img: Fern,
       size: "20gb",
     },
-
     {
       title: "mimic",
       img: Coffre,
       size: "7gb",
     },
   ];
-
   const reRenderBod = () => {
     setBodyKey((prevKey) => prevKey * -1);
   };
-
-
   const Upload = () => {
     onOpen();
     setLoading(true);
-
-    
   };
-
+  console.log(currentUser);
   return (
     <div>
       <Nav></Nav>

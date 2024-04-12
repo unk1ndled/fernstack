@@ -2,6 +2,7 @@ import React from "react";
 import NavUser from "../componenets/NavUser";
 import { Spacer, Image, Divider, Card, Tooltip } from "@nextui-org/react";
 import Pfp from "../images/frerein.jpg";
+import { useAuth } from "../contexts/AuthContext";
 
 const Profile = () => {
   return (

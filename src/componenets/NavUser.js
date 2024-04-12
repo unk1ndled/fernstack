@@ -22,7 +22,7 @@ function NavUser() {
   async function handleLogout() {
     try {
       await logout();
-      navigate("/");
+      navigate("/login");
     } catch (e) {
       console.log(e);
     }
@@ -53,8 +53,12 @@ function NavUser() {
               <p className="font-semibold">Signed in as</p>
               <p className="font-semibold">maka@example.com</p>
             </DropdownItem>
-            <DropdownItem key="treasure" href="/home">Treasure</DropdownItem>
-            <DropdownItem key="profile" href="/profile">Profile</DropdownItem>
+            <DropdownItem key="treasure" href="/treasure">
+              Treasure
+            </DropdownItem>
+            <DropdownItem key="profile" href="/profile">
+              Profile
+            </DropdownItem>
             <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
             <DropdownItem key="logout" color="danger" onClick={handleLogout}>
               Log Out

@@ -38,7 +38,7 @@ const Login = () => {
   const signInWithPopUp = async () => {
     try {
       await signInWithGoogle();
-      navigate("/");
+      navigate("/home");
     } catch (e) {
       console.log(e);
     }

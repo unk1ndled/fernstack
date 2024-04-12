@@ -19,6 +19,9 @@ import { database, storage } from "../config/firebase";
 import { ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
 import { addDoc } from "firebase/firestore";
+import { useAuth } from "../contexts/AuthContext";
+
+import { ROOT_FOLDER } from "../hooks/useFolder";
 
 const types = [
   {
@@ -40,21 +43,22 @@ const types = [
 ];
 
 //2mb
-const maxSize = "2097152";
+const MAX_UPLOAD_SIZE = "2097152";
 
 const UploadModal = (props) => {
-  const { children, stopLoading, ...otherProps } = props;
+  const { children, stopLoading, currentFolder, ...otherProps } = props;
   const [selected, setSelected] = React.useState("");
   const [fileName, setFileName] = React.useState("");
   const [folderName, setFolderName] = React.useState("");
   const [fileType, setFileType] = React.useState("textfiles");
   const [file, setFile] = React.useState(null);
 
+  const { currentUser } = useAuth();
+
   const handleFileLocalUpload = (event) => {
     const file = event.target.files[0];
     setFileName(file.name);
     setFile(file);
-    console.log(file.size);
   };
 
   useEffect(() => {
@@ -72,19 +76,24 @@ const UploadModal = (props) => {
     return new Promise((resolve) => setTimeout(resolve, milliseconds));
   };
 
-  const addFolder = async (name, parent) => {
+  const path = Array.isArray(currentFolder.path) ? [...currentFolder.path] : [];
+  if (currentFolder !== ROOT_FOLDER) {
+    path.push({ name: currentFolder.name, id: currentFolder.id });
+  }
+
+  const addFolder = async () => {
     await addDoc(database.folders, {
-      name:  folderName ,
-      // parentid :
-      // userid :
-      // path :
-      createdAt : database.getCurrTime()
+      name: folderName,
+      parentId: currentFolder.folder.id,
+      userId: currentUser.uid,
+      // path : ,
+      createdAt: database.getCurrTime(),
     });
   };
 
-  const uploadToFireBase = async () => {
+  const uploadFile = async () => {
     if (file === null) return;
-    if (file.size > maxSize) {
+    if (file.size > MAX_UPLOAD_SIZE) {
       alert("file too big");
       return;
     }
@@ -96,7 +105,7 @@ const UploadModal = (props) => {
 
   const handleSubmit = async (action) => {
     if (selected === "file") {
-      uploadToFireBase();
+      uploadFile();
     } else if (selected === "folder") {
       addFolder().then(() => {
         alert("folder uploaded");

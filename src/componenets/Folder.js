@@ -13,28 +13,28 @@ import {
 } from "@nextui-org/react";
 
 import FolderIcon from "../images/frefolder.svg";
+import { useNavigate } from "react-router-dom";
 
-const Folder = ({ item }) => {
-  const { size, title } = item;
+const Folder = ({ folder }) => {
+  const navigate = useNavigate();
 
+  const handleClick = () => {
+    navigate("/treasure/" + folder.id, { state: { folder: folder } });
+  };
   return (
     <Dropdown>
       <DropdownTrigger>
-        <Card
-          shadow="sm"
-          isPressable
-          onPress={() => console.log("item pressed")}
-        >
+        <Card shadow="sm" isPressable>
           <CardHeader className="text-small justify-between">
-            <b>{title}</b>
-            <p className="text-default-500">{size}</p>
+            <b>{folder.name}</b>
+            <p className="text-default-500">{folder.size}</p>
           </CardHeader>
           <CardBody className="overflow-visible p-0">
             <Image
               shadow="sm"
               radius="lg"
               width="100%"
-              alt={title}
+              alt={folder.name}
               className="w-full object-cover h-[140px]"
               src={FolderIcon}
             />
@@ -43,12 +43,16 @@ const Folder = ({ item }) => {
       </DropdownTrigger>
       <DropdownMenu variant="faded" aria-label="Dropdown menu with description">
         <DropdownSection title="Actions" showDivider>
-          <DropdownItem key="open" description="Check folder contents">
+          <DropdownItem
+            key="open"
+            description="Check folder contents"
+            onPress={() => {
+              handleClick();
+            }}
+          >
             Open
           </DropdownItem>
-          <DropdownItem key="download">
-            Download
-          </DropdownItem>
+          <DropdownItem key="download">Download</DropdownItem>
           <DropdownItem key="copy" description="Copy the Folder link">
             Copy link
           </DropdownItem>

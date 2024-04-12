@@ -4,7 +4,7 @@ import { getStorage } from "firebase/storage";
 import {
   getFirestore,
   collection,
-  Firestore,
+  doc,
   serverTimestamp,
 } from "firebase/firestore";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
@@ -21,7 +21,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-const auth = getAuth(app);
+export const auth = getAuth(app);
 const analytics = getAnalytics(app);
 export const storage = getStorage(app);
 const db = getFirestore(app);
@@ -29,7 +29,14 @@ const db = getFirestore(app);
 export const database = {
   folders: collection(db, "folders"),
   files: collection(db, "files"),
+
+  getFolderRef: async (id) => {
+    return doc(db, "folders", id);
+  },
   getCurrTime: serverTimestamp,
+  formatDoc: (doc) => {
+    return { id: doc.id, ...doc.data() };
+  },
 };
 
 export const googleProvider = new GoogleAuthProvider();

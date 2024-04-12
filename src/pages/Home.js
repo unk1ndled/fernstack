@@ -26,34 +26,23 @@ import UploadButton from "../componenets/UploadButton";
 import UploadModal from "../componenets/UploadModal";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+
+import { useFolder } from "../hooks/useFolder";
 
 const Test = () => {
-  const [value, setValue] = useState(1);
+  const [value, setValue] = useState(44);
   const [isLoading, setLoading] = useState(false);
-  const [currentFolder, setCurrentFolder] = React.useState();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setValue((v) => (v >= 100 ? 1 : 2 * v));
-    }, 1000);
+  const location = useLocation();
+  const user = useAuth();
 
-    return () => clearInterval(interval);
-  }, []);
-
-  // useEffect(() => {
-  //   const lul = async () => {
-  //     const docsnap = await getDoc(
-  //       doc(db, "folders", "8QtorMFQaepzi5D6wPTG")
-  //     );
-  //     console.log(docsnap.data());
-  //   };
-  //   lul();
-  // }, []);
+  const folder_ = location.state != null ? location.state : null;
+  const id_ = folder_ != null ? folder_.folder.id : null;
+  const currentFolder = useFolder(id_, folder_);
 
   const uploadFile = async (file, folderid) => {};
-
-
 
   const list = [
     {
@@ -81,17 +70,6 @@ const Test = () => {
       title: "mimic",
       img: Coffre,
       size: "7gb",
-    },
-  ];
-
-  const folders = [
-    {
-      title: "School",
-      size: "100mb",
-    },
-    {
-      title: "Spice",
-      size: "100mb",
     },
   ];
 
@@ -124,13 +102,14 @@ const Test = () => {
         <UploadButton onPress={Upload} isLoading={isLoading}></UploadButton>
         <UploadModal
           isOpen={isOpen}
+          currentFolder={currentFolder}
           onOpenChange={onOpenChange}
           stopLoading={setLoading}
         ></UploadModal>
         <Spacer y={7} />
         <div className="w-7/12 flex items-start ">
           <Breadcrumbs color="secondary" variant="light">
-            <BreadcrumbItem>root</BreadcrumbItem>
+            <BreadcrumbItem href="/treasure">root</BreadcrumbItem>
             <BreadcrumbItem>folder 1</BreadcrumbItem>
             <BreadcrumbItem>folder 2</BreadcrumbItem>
             <BreadcrumbItem>folder 3</BreadcrumbItem>
@@ -146,9 +125,10 @@ const Test = () => {
               {list.map((item, index) => (
                 <File key={index} item={item}></File>
               ))}
-              {folders.map((item, index) => (
-                <Folder key={index} item={item}></Folder>
-              ))}
+              {currentFolder &&
+                currentFolder.childFolders.map((item, index) => (
+                  <Folder key={index} folder={item}></Folder>
+                ))}
             </div>
           </Body>
         </Grid>

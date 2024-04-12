@@ -32,7 +32,8 @@ const SignUp = () => {
       await signup(emailRef.current.value, passwordRef.current.value);
       navigate("/login");
     } catch (error) {
-      setError("An error occurred while creating your account.");
+      alert("An error occurred while creating your account.")
+      setError(error.code);
     }
   }
 

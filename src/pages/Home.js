@@ -3,12 +3,7 @@ import { useEffect, useState } from "react";
 
 import styled from "styled-components";
 import File from "../componenets/File";
-import {
-  Divider,
-  Progress,
-  Spacer,
-  useDisclosure,
-} from "@nextui-org/react";
+import { Divider, Progress, Spacer, useDisclosure } from "@nextui-org/react";
 import Coffre from "../images/Coffre.gif";
 import Frerein from "../images/frieren.gif";
 import Fern from "../images/fern-eating-grapes-sour-grapes.gif";
@@ -17,6 +12,8 @@ import Nav from "../componenets/NavUser";
 import Folder from "../componenets/Folder";
 import UploadButton from "../componenets/UploadButton";
 import UploadModal from "../componenets/UploadModal";
+import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Test = () => {
   const [value, setValue] = useState(1);
@@ -26,7 +23,7 @@ const Test = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setValue((v) => (v >= 100 ? 1 :  2*v));
+      setValue((v) => (v >= 100 ? 1 : 2 * v));
     }, 1000);
 
     return () => clearInterval(interval);
@@ -99,7 +96,11 @@ const Test = () => {
         />
         <Spacer y={4} />
         <UploadButton onPress={Upload} isLoading={isLoading}></UploadButton>
-        <UploadModal isOpen={isOpen} onOpenChange={onOpenChange} stopLoading={setLoading}></UploadModal>
+        <UploadModal
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+          stopLoading={setLoading}
+        ></UploadModal>
         <Spacer y={4} />
         <Grid>
           <Body>

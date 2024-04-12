@@ -1,6 +1,5 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 import {
   getFirestore,
@@ -8,6 +7,7 @@ import {
   Firestore,
   serverTimestamp,
 } from "firebase/firestore";
+import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCaZBezp7gpsiLH2bqUiqKRY-MSmzwndlQ",
@@ -31,3 +31,5 @@ export const database = {
   files: collection(db, "files"),
   getCurrTime: serverTimestamp,
 };
+
+export const googleProvider = new GoogleAuthProvider();

@@ -12,8 +12,21 @@ import {
 } from "@nextui-org/react";
 import Logo from "./Logo";
 import Maka from "../images/frerein.jpg";
+import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 function NavUser() {
+  const navigate = useNavigate();
+
+  const { logout } = useAuth();
+  async function handleLogout() {
+    try {
+      await logout();
+      navigate("/");
+    } catch (e) {
+      console.log(e);
+    }
+  }
   return (
     <Navbar maxWidth="full">
       <NavbarBrand>
@@ -43,7 +56,7 @@ function NavUser() {
             <DropdownItem key="treasure" href="/home">Treasure</DropdownItem>
             <DropdownItem key="profile" href="/profile">Profile</DropdownItem>
             <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
-            <DropdownItem key="logout" color="danger">
+            <DropdownItem key="logout" color="danger" onClick={handleLogout}>
               Log Out
             </DropdownItem>
           </DropdownMenu>

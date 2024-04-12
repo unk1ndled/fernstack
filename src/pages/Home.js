@@ -24,6 +24,8 @@ import Nav from "../componenets/NavUser";
 import Folder from "../componenets/Folder";
 import UploadButton from "../componenets/UploadButton";
 import UploadModal from "../componenets/UploadModal";
+import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Test = () => {
   const [value, setValue] = useState(1);

@@ -12,6 +12,7 @@ import useDarkMode from "use-dark-mode";
 import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 import { AuthProvider } from "./contexts/AuthContext";
+import Profile from "./pages/Profile";
 
 const App = () => {
   const navigate = useNavigate();
@@ -23,6 +24,7 @@ const App = () => {
           <Route path="/register" element={<SignUp />} />
           <Route path="/" element={<Login />} />
           <Route path="/home" element={<Test />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </NextUIProvider>
     </AuthProvider>

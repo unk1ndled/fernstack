@@ -28,7 +28,7 @@ function NavUser() {
     }
   }
   return (
-    <Navbar>
+    <Navbar maxWidth="full">
       <NavbarBrand>
         <Logo />
         <Spacer />
@@ -49,13 +49,12 @@ function NavUser() {
             />
           </DropdownTrigger>
           <DropdownMenu aria-label="Profile Actions" variant="flat">
-            <DropdownItem key="profile" className="h-14 gap-2">
+            <DropdownItem key="profile" isDisabled className="h-14 gap-2">
               <p className="font-semibold">Signed in as</p>
               <p className="font-semibold">maka@example.com</p>
             </DropdownItem>
-            <DropdownItem key="settings">My Settings</DropdownItem>
-            <DropdownItem key="analytics">Analytics</DropdownItem>
-            <DropdownItem key="configurations">Configurations</DropdownItem>
+            <DropdownItem key="treasure" href="/home">Treasure</DropdownItem>
+            <DropdownItem key="profile" href="/profile">Profile</DropdownItem>
             <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
             <DropdownItem key="logout" color="danger" onClick={handleLogout}>
               Log Out

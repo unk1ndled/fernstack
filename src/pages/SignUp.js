@@ -23,6 +23,7 @@ const SignUp = () => {
   console.log(error);
 
   async function handleSubmit(e) {
+    setError();
     e.preventDefault();
     if (passwordRef.current.value !== passwordConfirmedRef.current.value) {
       return setError("Passwords do not match");
@@ -30,7 +31,6 @@ const SignUp = () => {
     try {
       setError();
       await signup(emailRef.current.value, passwordRef.current.value);
-      navigate("/login");
     } catch (error) {
       alert("An error occurred while creating your account.")
       setError(error.code);
@@ -39,30 +39,42 @@ const SignUp = () => {
 
   const signInWithPopUp = async () => {
     try {
+      setError();
       await signInWithGoogle();
+      navigate("/home");
     } catch (e) {
+      setError("An error occurred while creating your account.");
       console.log(e);
     }
   };
 
   return (
     <div className="flex items-center justify-center w-screen h-screen max-w-full max-h-full ">
-      <div className="flex flex-row w-4/5 h-4/5  gap-4  ">
-        <div className="flex flex-col w-1/2 h-full  mt-8">
+      <div className="flex flex-row w-4/5 h-4/5  gap-4  pr-4">
+        <div className="flex justify-center items-center flex-col w-1/2 h-full pr-8 -ml-6 ">
           <Logo src={Icon}></Logo>
-          <p className=" text-4xl font-bold text-white mt-10 ">
-            Choubik loubik Mimic bin Idik
+          <p className=" text-5xl text-neutral-200  text-center font-bold mt-10  ">
+            Choubik Loubik
+            <p style={{ color: "#9455d3" }}>Mimic</p>
+            Bin Idik
           </p>
         </div>
 
         <Divider orientation="vertical"></Divider>
         <div className="flex items-center flex-col w-1/2 h-full ml- mt-12 gap-8 ">
+          <p
+            className="  text-4xl font-semibold -mt-16"
+            style={{ color: "#9455d3" }}
+          >
+            Register page
+          </p>
           <Input
             type="email"
             label="Email"
             variant="bordered"
             placeholder="Enter your email"
             className="w-2/3 mt-8 "
+            isInvalid={error ? true : false}
             ref={emailRef}
           />
           <Input
@@ -70,6 +82,7 @@ const SignUp = () => {
             variant="bordered"
             placeholder="Enter your password"
             ref={passwordRef}
+            isInvalid={error ? true : false}
             endContent={
               <button
                 className="focus:outline-none"
@@ -95,6 +108,7 @@ const SignUp = () => {
             variant="bordered"
             placeholder="Confirm your password"
             ref={passwordConfirmedRef}
+            isInvalid={error ? true : false}
             endContent={
               <button
                 className="focus:outline-none"
@@ -114,25 +128,31 @@ const SignUp = () => {
             type={isVisible ? "text" : "password"}
             className="w-2/3"
           />
+          {error && (
+            <p className=" -mt-5" style={{ color: "#f01362" }}>
+              Please Enter valid Data
+            </p>
+          )}
+
           <Button
             className="w-1/3"
-            color="primary"
+            color="secondary"
             variant="shadow"
             onClick={handleSubmit}
           >
             Register
           </Button>
 
-          <Link to="/" className=" text-blue-600 underline">
+          <Link to="/" style={{ color: "#9455d3" }} className=" text-blue-600 ">
             Nah i'm good😎
           </Link>
 
-          <Divider className="mt-8 mb-8 w-2/3"></Divider>
+          <Divider className="w-2/3"></Divider>
 
           <Button
             onClick={signInWithPopUp}
             className=" w-2/5 h-12"
-            color="primary"
+            color="secondary"
             variant="ghost"
             startContent={<FcGoogle />}
           >
@@ -145,10 +165,8 @@ const SignUp = () => {
 };
 
 const Logo = styled.img`
-  height: 30%;
-  width: 30%;
-  margin-left: 4rem;
-  margin-top: 4rem;
+  height: 40%;
+  width: 40%;
 `;
 
 export default SignUp;

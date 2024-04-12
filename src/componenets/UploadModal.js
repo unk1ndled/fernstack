@@ -15,34 +15,46 @@ import {
   SelectItem,
 } from "@nextui-org/react";
 
+import { database, storage } from "../config/firebase";
+import { ref, uploadBytes } from "firebase/storage";
+import { v4 } from "uuid";
+import { addDoc } from "firebase/firestore";
+
 const types = [
   {
     value: "image",
-    name: "image",
+    collection: "images",
+  },
+  {
+    value: "pdf",
+    collection: "pdfs",
   },
   {
     value: "video",
-    name: "video",
+    collection: "videos",
   },
   {
-    value: "plain text",
-    name: "plain text",
+    value: "text",
+    collection: "textfiles",
   },
 ];
+
+//2mb
+const maxSize = "2097152";
 
 const UploadModal = (props) => {
   const { children, stopLoading, ...otherProps } = props;
   const [selected, setSelected] = React.useState("");
   const [fileName, setFileName] = React.useState("");
   const [folderName, setFolderName] = React.useState("");
-  const [fileType, setFileType] = React.useState("");
+  const [fileType, setFileType] = React.useState("textfiles");
   const [file, setFile] = React.useState(null);
 
-  const handleFileUpload = (event) => {
+  const handleFileLocalUpload = (event) => {
     const file = event.target.files[0];
     setFileName(file.name);
     setFile(file);
-    console.log(file);
+    console.log(file.size);
   };
 
   useEffect(() => {
@@ -60,12 +72,42 @@ const UploadModal = (props) => {
     return new Promise((resolve) => setTimeout(resolve, milliseconds));
   };
 
-  const handleSubmit = async (action) => {
-    action();
-    await sleep(2000); // Sleep for 2 seconds
+  const addFolder = async (name, parent) => {
+    await addDoc(database.folders, {
+      name:  folderName ,
+      // parentid :
+      // userid :
+      // path :
+      createdAt : database.getCurrTime()
+    });
+  };
 
+  const uploadToFireBase = async () => {
+    if (file === null) return;
+    if (file.size > maxSize) {
+      alert("file too big");
+      return;
+    }
+    const fileref = ref(storage, `${fileType}/${v4() + fileName} `);
+    uploadBytes(fileref, file).then(() => {
+      alert("File uploaded");
+    });
+  };
+
+  const handleSubmit = async (action) => {
+    if (selected === "file") {
+      uploadToFireBase();
+    } else if (selected === "folder") {
+      addFolder().then(() => {
+        alert("folder uploaded");
+      });
+    }
+
+    action();
+    await sleep(3000); // Sleep for 2 seconds
     stopLoading();
   };
+
   const cancel = (action) => {
     action();
     stopLoading();
@@ -122,7 +164,7 @@ const UploadModal = (props) => {
                     {/* technical element to make uploading work its invisible */}
                     <input
                       type="file"
-                      onChange={(e) => handleFileUpload(e)}
+                      onChange={(e) => handleFileLocalUpload(e)}
                       style={{ display: "none" }}
                     />
 
@@ -152,7 +194,7 @@ const UploadModal = (props) => {
                       onChange={handleSelectionChange}
                     >
                       {types.map((type) => (
-                        <SelectItem key={type.value} value={type.value}>
+                        <SelectItem key={type.collection} value={type.value}>
                           {type.value}
                         </SelectItem>
                       ))}

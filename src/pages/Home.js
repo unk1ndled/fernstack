@@ -29,6 +29,7 @@ import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
 import { useFolder } from "../hooks/useFolder";
+import BreadCrumb from "../componenets/BreadCrumb";
 
 const Test = () => {
   const [value, setValue] = useState(44);
@@ -41,8 +42,10 @@ const Test = () => {
   const folder_ = location.state != null ? location.state : null;
   const id_ = folder_ != null ? folder_.folder.id : null;
   const currentFolder = useFolder(id_, folder_);
+  const folder = currentFolder.folder;
 
-  const uploadFile = async (file, folderid) => {};
+  console.log(currentFolder);
+  console.log(folder);
 
   const list = [
     {
@@ -102,21 +105,13 @@ const Test = () => {
         <UploadButton onPress={Upload} isLoading={isLoading}></UploadButton>
         <UploadModal
           isOpen={isOpen}
-          currentFolder={currentFolder}
+          currentFolder={folder}
           onOpenChange={onOpenChange}
           stopLoading={setLoading}
         ></UploadModal>
         <Spacer y={7} />
         <div className="w-7/12 flex items-start ">
-          <Breadcrumbs color="secondary" variant="light">
-            <BreadcrumbItem href="/treasure">root</BreadcrumbItem>
-            <BreadcrumbItem>folder 1</BreadcrumbItem>
-            <BreadcrumbItem>folder 2</BreadcrumbItem>
-            <BreadcrumbItem>folder 3</BreadcrumbItem>
-            <BreadcrumbItem>folder 4</BreadcrumbItem>
-            <BreadcrumbItem>folder 5</BreadcrumbItem>
-            <BreadcrumbItem>folder 6</BreadcrumbItem>
-          </Breadcrumbs>
+          <BreadCrumb folder={folder}></BreadCrumb>
         </div>
         <Spacer y={3} />
         <Grid>

@@ -1,4 +1,5 @@
 import React from "react";
+import { useState } from "react";
 import {
   Dropdown,
   DropdownTrigger,
@@ -16,11 +17,15 @@ import FolderIcon from "../images/frefolder.svg";
 import { useNavigate } from "react-router-dom";
 
 const Folder = ({ folder }) => {
+  const [del, setDel] = useState(false);
+  
   const navigate = useNavigate();
 
-  const handleClick = () => {
+  const openFolder = () => {
     navigate("/treasure/" + folder.id, { state: { folder: folder } });
   };
+
+  const deleteFolder = () => {};
   return (
     <Dropdown>
       <DropdownTrigger>
@@ -47,7 +52,7 @@ const Folder = ({ folder }) => {
             key="open"
             description="Check folder contents"
             onPress={() => {
-              handleClick();
+              openFolder();
             }}
           >
             Open
@@ -63,6 +68,9 @@ const Folder = ({ folder }) => {
             className="text-danger"
             color="danger"
             description="Permanently delete the Fodler"
+            onPress={() => {
+              deleteFolder();
+            }}
           >
             Delete file
           </DropdownItem>

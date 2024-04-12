@@ -66,7 +66,7 @@ const SignUp = () => {
             className="  text-4xl font-semibold -mt-16"
             style={{ color: "#9455d3" }}
           >
-            Register page
+            Register
           </p>
           <Input
             type="email"
@@ -143,7 +143,7 @@ const SignUp = () => {
             Register
           </Button>
 
-          <Link to="/" style={{ color: "#9455d3" }} className=" text-blue-600 ">
+          <Link to="/login" style={{ color: "#9455d3" }} className=" text-blue-600 ">
             Nah i'm good😎
           </Link>
 

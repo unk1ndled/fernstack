@@ -52,7 +52,6 @@ export function useFolder(folderId = null, folder = null) {
 
   useEffect(() => {
     dispatch({ type: ACTIONS.SELECT_FOLDER, payload: { folderId, folder } });
-    console.log(folderId);
   }, [folderId, folder]);
 
   useEffect(() => {

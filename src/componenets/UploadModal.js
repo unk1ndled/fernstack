@@ -76,17 +76,20 @@ const UploadModal = (props) => {
     return new Promise((resolve) => setTimeout(resolve, milliseconds));
   };
 
-  const path = Array.isArray(currentFolder.path) ? [...currentFolder.path] : [];
-  if (currentFolder !== ROOT_FOLDER) {
-    path.push({ name: currentFolder.name, id: currentFolder.id });
-  }
-
   const addFolder = async () => {
+    if (currentFolder == null) return;
+
+    const path = [...currentFolder.path];
+    if (currentFolder !== ROOT_FOLDER) {
+      path.push({ name: currentFolder.name, id: currentFolder.id });
+    }
+    console.log(path);
+
     await addDoc(database.folders, {
       name: folderName,
-      parentId: currentFolder.folder.id,
+      parentId: currentFolder.id,
       userId: currentUser.uid,
-      // path : ,
+      path: path,
       createdAt: database.getCurrTime(),
     });
   };

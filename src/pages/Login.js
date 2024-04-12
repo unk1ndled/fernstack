@@ -29,7 +29,7 @@ const Login = () => {
     try {
       setError();
       await login(emailRef.current.value, passwordRef.current.value);
-      navigate("/home");
+      navigate("/treasure");
     } catch (error) {
       setError("An error occurred while verifying your account.");
     }
@@ -38,7 +38,7 @@ const Login = () => {
   const signInWithPopUp = async () => {
     try {
       await signInWithGoogle();
-      navigate("/home");
+      navigate("/treasure");
     } catch (e) {
       setError("An error occurred while verifying your account.");
     }
@@ -62,7 +62,7 @@ const Login = () => {
             className="  text-4xl font-semibold -mt-16"
             style={{ color: "#9455d3" }}
           >
-            Login page
+            Login
           </p>
           <Input
             type="email"

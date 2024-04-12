@@ -13,19 +13,37 @@ import {
   Image,
 } from "@nextui-org/react";
 
+import { deleteDoc, getDocs, query, where } from "firebase/firestore";
+
+import { database } from "../config/firebase";
+
 import FolderIcon from "../images/frefolder.svg";
 import { useNavigate } from "react-router-dom";
 
 const Folder = ({ folder }) => {
   const [del, setDel] = useState(false);
-  
+
   const navigate = useNavigate();
 
   const openFolder = () => {
     navigate("/treasure/" + folder.id, { state: { folder: folder } });
   };
 
-  const deleteFolder = () => {};
+  const deleteFolderAndSubFolders = async (fId) => {
+    const q = query(database.folders, where("parentId", "==", fId));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach(async (subfolderDoc) => {
+      const subfolderId = subfolderDoc.id;
+      await deleteFolderAndSubFolders(subfolderId);
+    });
+    //FILES
+    deleteDoc(await database.getFolderRef(fId));
+  };
+
+  const delDoc = async () => {
+    deleteFolderAndSubFolders(folder.id);
+  };
+
   return (
     <Dropdown>
       <DropdownTrigger>
@@ -69,7 +87,7 @@ const Folder = ({ folder }) => {
             color="danger"
             description="Permanently delete the Fodler"
             onPress={() => {
-              deleteFolder();
+              delDoc();
             }}
           >
             Delete file

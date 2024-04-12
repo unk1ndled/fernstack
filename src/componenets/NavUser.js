@@ -56,7 +56,7 @@ function NavUser() {
             <DropdownItem key="treasure" href="/treasure">
               Treasure
             </DropdownItem>
-            <DropdownItem key="profile" href="/profile">
+            <DropdownItem key="userprofile" href="/profile">
               Profile
             </DropdownItem>
             <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>

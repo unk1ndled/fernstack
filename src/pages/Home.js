@@ -15,10 +15,6 @@ import Coffre from "../images/Coffre.gif";
 import Frerein from "../images/frieren.gif";
 import Fern from "../images/fern-eating-grapes-sour-grapes.gif";
 
-import { database } from "../config/firebase";
-
-import { getDocs, getDoc, collection, doc } from "firebase/firestore";
-
 import File from "../componenets/File";
 import Nav from "../componenets/NavUser";
 import Folder from "../componenets/Folder";
@@ -35,17 +31,15 @@ const Test = () => {
   const [value, setValue] = useState(44);
   const [isLoading, setLoading] = useState(false);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [bodyKey, setBodyKey] = useState(-1);
 
-  const location = useLocation();
   const user = useAuth();
+  console.log(user.currentUser);
 
-  const folder_ = location.state != null ? location.state : null;
+  const { state: folder_ } = useLocation();
   const id_ = folder_ != null ? folder_.folder.id : null;
   const currentFolder = useFolder(id_, folder_);
   const folder = currentFolder.folder;
-
-  console.log(currentFolder);
-  console.log(folder);
 
   const list = [
     {
@@ -76,9 +70,16 @@ const Test = () => {
     },
   ];
 
+  const reRenderBod = () => {
+    setBodyKey((prevKey) => prevKey * -1);
+  };
+
+
   const Upload = () => {
     onOpen();
     setLoading(true);
+
+    
   };
 
   return (
@@ -114,7 +115,7 @@ const Test = () => {
           <BreadCrumb folder={folder}></BreadCrumb>
         </div>
         <Spacer y={3} />
-        <Grid>
+        <Grid key={bodyKey}>
           <Body>
             <div className=" gap-4 grid grid-cols-2  sm:grid-cols-6">
               {list.map((item, index) => (

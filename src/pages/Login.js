@@ -38,19 +38,21 @@ const Login = () => {
   const signInWithPopUp = async () => {
     try {
       await signInWithGoogle();
-      navigate("/");
+      navigate("/home");
     } catch (e) {
-      console.log(e);
+      setError("An error occurred while verifying your account.");
     }
   };
 
   return (
     <div className="flex items-center justify-center w-screen h-screen max-w-full max-h-full ">
-      <div className="flex flex-row w-4/5 h-4/5  gap-4  ">
-        <div className="flex flex-col w-1/2 h-full  mt-8">
+      <div className="flex flex-row w-4/5 h-4/5  gap-4  mr-4">
+        <div className="flex justify-center items-center flex-col w-1/2 h-full pr-8 ">
           <Logo src={Icon}></Logo>
-          <p className=" text-4xl font-bold text-white mt-10 ">
-            Choubik loubik Mimic bin Idik
+          <p className=" text-5xl text-neutral-200 text-center font-bold mt-10 ">
+            Choubik Loubik
+            <p style={{ color: "#9455d3" }}>Mimic</p>
+            Bin Idik
           </p>
         </div>
 
@@ -62,6 +64,7 @@ const Login = () => {
             variant="bordered"
             placeholder="Enter your email"
             className="w-2/3 mt-8 "
+            isInvalid={error ? true : false}
             ref={emailRef}
           />
           <Input
@@ -69,6 +72,7 @@ const Login = () => {
             variant="bordered"
             placeholder="Enter your password"
             ref={passwordRef}
+            isInvalid={error ? true : false}
             endContent={
               <button
                 className="focus:outline-none"
@@ -89,24 +93,28 @@ const Login = () => {
             className="w-2/3"
           />
 
+          {error && (
+            <p className=" -mt-5" style={{ color: "#f01362" }}>
+              Please Enter valid Data
+            </p>
+          )}
+
           <Button
             onClick={handleSubmit}
             className="w-1/3"
-            color="primary"
+            color="secondary"
             variant="shadow"
           >
             Login now !
           </Button>
-          <Link to="/register" className="underline">
-            i don't have an account😥
-          </Link>
+          <Link to="/register">i don't have an account😥</Link>
 
           <Divider className="mt-8 mb-8 w-2/3"></Divider>
 
           <Button
             onClick={signInWithPopUp}
             className=" w-2/5 h-12"
-            color="primary"
+            color="secondary"
             variant="ghost"
             startContent={<FcGoogle />}
           >
@@ -119,10 +127,8 @@ const Login = () => {
 };
 
 const Logo = styled.img`
-  height: 30%;
-  width: 30%;
-  margin-left: 4rem;
-  margin-top: 4rem;
+  height: 40%;
+  width: 40%;
 `;
 
 export default Login;

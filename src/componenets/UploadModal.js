@@ -22,6 +22,7 @@ import { addDoc } from "firebase/firestore";
 import { useAuth } from "../contexts/AuthContext";
 
 import { ROOT_FOLDER } from "../hooks/useFolder";
+import { sleep } from "../utils/sleep";
 
 const types = [
   {
@@ -46,7 +47,7 @@ const types = [
 const MAX_UPLOAD_SIZE = "2097152";
 
 const UploadModal = (props) => {
-  const { children, stopLoading, currentFolder, ...otherProps } = props;
+  const { children, stopLoading, currentFolder, update, ...otherProps } = props;
   const [selected, setSelected] = React.useState("");
   const [fileName, setFileName] = React.useState("");
   const [folderName, setFolderName] = React.useState("");
@@ -70,10 +71,6 @@ const UploadModal = (props) => {
 
   const handleSelectionChange = (e) => {
     setFileType(e.target.value);
-  };
-
-  const sleep = (milliseconds) => {
-    return new Promise((resolve) => setTimeout(resolve, milliseconds));
   };
 
   const addFolder = async () => {
@@ -111,7 +108,7 @@ const UploadModal = (props) => {
       uploadFile();
     } else if (selected === "folder") {
       addFolder().then(() => {
-        alert("folder uploaded");
+        update();
       });
     }
 
@@ -127,6 +124,9 @@ const UploadModal = (props) => {
 
   return (
     <Modal
+      isDismissable={false}
+      isKeyboardDismissDisabled={false}
+      hideCloseButton={true}
       {...otherProps}
       backdrop="blur"
       size="4xl"
@@ -179,7 +179,6 @@ const UploadModal = (props) => {
                       onChange={(e) => handleFileLocalUpload(e)}
                       style={{ display: "none" }}
                     />
-
                     <Button
                       color="secondary"
                       variant="faded"

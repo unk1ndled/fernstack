@@ -8,7 +8,6 @@ import {
   DropdownSection,
   Card,
   CardBody,
-  CardFooter,
   CardHeader,
   Image,
 } from "@nextui-org/react";
@@ -19,8 +18,9 @@ import { database } from "../config/firebase";
 
 import FolderIcon from "../images/frefolder.svg";
 import { useNavigate } from "react-router-dom";
+import { sleep } from "../utils/sleep";
 
-const Folder = ({ folder }) => {
+const Folder = ({ folder, update }) => {
   const [del, setDel] = useState(false);
 
   const navigate = useNavigate();
@@ -41,7 +41,9 @@ const Folder = ({ folder }) => {
   };
 
   const delDoc = async () => {
-    deleteFolderAndSubFolders(folder.id);
+    await deleteFolderAndSubFolders(folder.id);
+    await sleep(500);
+    update();
   };
 
   return (

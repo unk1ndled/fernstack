@@ -28,7 +28,7 @@ function NavUser() {
     }
   }
   return (
-    <Navbar maxWidth="full">
+    <Navbar shouldHideOnScroll maxWidth="full">
       <NavbarBrand>
         <Logo />
         <Spacer />

@@ -27,7 +27,7 @@ import { useLocation } from "react-router-dom";
 import { useFolder } from "../hooks/useFolder";
 import BreadCrumb from "../componenets/BreadCrumb";
 
-const Test = () => {
+const Treasure = () => {
   const [value, setValue] = useState(44);
   const [isLoading, setLoading] = useState(false);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -35,9 +35,7 @@ const Test = () => {
 
   const user = useAuth();
   console.log(user.currentUser);
-  const location = useLocation();
   const { currentUser } = useAuth();
-
   const { state: folder_ } = useLocation();
   const id_ = folder_ != null ? folder_.folder.id : null;
   const currentFolder = useFolder(id_, folder_);
@@ -60,7 +58,7 @@ const Test = () => {
     },
   ];
   const reRenderBod = () => {
-    setBodyKey((prevKey) => prevKey * -1);
+    window.location.reload();
   };
   const Upload = () => {
     onOpen();
@@ -94,6 +92,7 @@ const Test = () => {
           currentFolder={folder}
           onOpenChange={onOpenChange}
           stopLoading={setLoading}
+          update={reRenderBod}
         ></UploadModal>
         <Spacer y={7} />
         <div className="w-7/12 flex items-start ">
@@ -104,11 +103,18 @@ const Test = () => {
           <Body>
             <div className=" gap-4 grid grid-cols-2  sm:grid-cols-6">
               {list.map((item, index) => (
-                <File key={index} item={item}></File>
+                <File key={index} item={item}>
+                  {" "}
+                  update ={reRenderBod}
+                </File>
               ))}
               {currentFolder &&
                 currentFolder.childFolders.map((item, index) => (
-                  <Folder key={index} folder={item}></Folder>
+                  <Folder
+                    key={index}
+                    folder={item}
+                    update={reRenderBod}
+                  ></Folder>
                 ))}
             </div>
           </Body>
@@ -141,4 +147,4 @@ const Container = styled.div`
   align-items: center;
 `;
 
-export default Test;
+export default Treasure;

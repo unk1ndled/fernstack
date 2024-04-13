@@ -10,7 +10,7 @@ const ACTIONS = {
   SET_CHILD_FILES: "set-child-files",
 };
 
-export const ROOT_FOLDER = { name: "Root", id: null, path: [], };
+export const ROOT_FOLDER = { name: "Root", id: null, path: [] };
 
 function reducer(state, { type, payload }) {
   switch (type) {
@@ -95,18 +95,23 @@ export function useFolder(folderId = null, folder = null) {
     }
   }, [folderId, currentUser]);
 
-  // useEffect(() => {
-  //   return database.folders
-  //     .where("parentId", "==", folderId)
-  //     .where("userId", "==", currentUser.uid)
-  //     .orderBy("createdAt")
-  //     .onSnapshot((snapshot) => {
-  //       dispatch({
-  //         type: ACTIONS.SET_CHILD_FOLDERS,
-  //         payload: { childFolders: snapshot.docs.map(database.formatDoc) },
-  //       });
-  //     });
-  // }, [folderId, currentUser]);
+  useEffect(() => {
+    const setChildFolders = async () => {
+      const q = query(
+        database.files,
+        where("folderId", "==", folderId),
+        where("userId", "==", currentUser.uid)
+      );
+      const querySnapshot = await getDocs(q);
+      dispatch({
+        type: ACTIONS.SET_CHILD_FILES,
+        payload: { childFiles: querySnapshot.docs.map(database.formatDoc) },
+      });
+    };
+    if (currentUser && currentUser.uid) {
+      setChildFolders();
+    }
+  }, [folderId, currentUser]);
 
   // useEffect(() => {
   //   return (

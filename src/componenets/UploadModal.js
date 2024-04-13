@@ -16,13 +16,18 @@ import {
 } from "@nextui-org/react";
 
 import { database, storage } from "../config/firebase";
-import { ref, uploadBytes } from "firebase/storage";
+import {
+  getDownloadURL,
+  ref,
+  uploadBytes,
+  uploadBytesResumable,
+} from "firebase/storage";
 import { v4 } from "uuid";
 import { addDoc } from "firebase/firestore";
 import { useAuth } from "../contexts/AuthContext";
 
 import { ROOT_FOLDER } from "../hooks/useFolder";
-import { sleep } from "../utils/sleep";
+import { sleep } from "../functions/sleep";
 
 const types = [
   {
@@ -56,12 +61,7 @@ const UploadModal = (props) => {
 
   const { currentUser } = useAuth();
 
-  const handleFileLocalUpload = (event) => {
-    const file = event.target.files[0];
-    setFileName(file.name);
-    setFile(file);
-  };
-
+  //side effect for renaming
   useEffect(() => {
     if (fileName !== "") {
       const updatedFile = new File([file], fileName, { type: file.type });
@@ -69,11 +69,25 @@ const UploadModal = (props) => {
     }
   }, [fileName]);
 
+  //selecting file type
   const handleSelectionChange = (e) => {
     setFileType(e.target.value);
   };
 
-  const addFolder = async () => {
+  //Locally uploading the folder
+  const handleFileLocalUpload = (event) => {
+    const file = event.target.files[0];
+    setFileName(file.name);
+    setFile(file);
+  };
+
+  //cancel
+  const cancel = (action) => {
+    action();
+    stopLoading();
+  };
+
+  const uploadFolder = async () => {
     if (currentFolder == null) return;
 
     const path = [...currentFolder.path];
@@ -92,33 +106,66 @@ const UploadModal = (props) => {
   };
 
   const uploadFile = async () => {
-    if (file === null) return;
-    if (file.size > MAX_UPLOAD_SIZE) {
-      alert("file too big");
-      return;
-    }
-    const fileref = ref(storage, `${fileType}/${v4() + fileName} `);
-    uploadBytes(fileref, file).then(() => {
-      alert("File uploaded");
-    });
+    // if (file === null) return;
+    // if (file.size > MAX_UPLOAD_SIZE) {
+    //   alert("file too big");
+    //   return;
+    // }
+    const filePath =
+      currentFolder === ROOT_FOLDER
+        ? `${currentFolder.path.map((entry) => entry.name).join("/")}/${
+            v4() + file.name
+          }`
+        : `${currentFolder.path.map((entry) => entry.name).join("/")}/${
+            currentFolder.name
+          }/${v4() + file.name}`;
+
+    const fileref = ref(storage, `/files/${currentUser.uid}/${filePath} `);
+    const uploadTask = uploadBytesResumable(fileref, file);
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        // const progress =
+        //   (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        // console.log("Upload is " + progress + "% done");
+        // switch (snapshot.state) {
+        //   case "paused":
+        //     console.log("Upload is paused");
+        //     break;
+        //   case "running":
+        //     console.log("Upload is running");
+        //     break;
+        //   default:
+        //     console.log("first");
+        // }
+      },
+      (error) => {},
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          addDoc(database.files, {
+            url: downloadURL,
+            name: fileName,
+            folderId: currentFolder.id,
+            userId: currentUser.uid,
+            size: file.size,
+            type: fileType,
+            createdAt: database.getCurrTime(),
+          });
+        });
+      }
+    );
   };
 
-  const handleSubmit = async (action) => {
+  const confirmUpload = async (action) => {
     if (selected === "file") {
       uploadFile();
     } else if (selected === "folder") {
-      addFolder().then(() => {
+      uploadFolder().then(() => {
         update();
       });
     }
-
     action();
     await sleep(3000); // Sleep for 2 seconds
-    stopLoading();
-  };
-
-  const cancel = (action) => {
-    action();
     stopLoading();
   };
 
@@ -238,7 +285,7 @@ const UploadModal = (props) => {
                 color="secondary"
                 variant="flat"
                 onPress={() => {
-                  handleSubmit(onClose);
+                  confirmUpload(onClose);
                 }}
               >
                 Submit

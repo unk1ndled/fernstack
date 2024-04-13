@@ -18,7 +18,7 @@ import { database } from "../config/firebase";
 
 import FolderIcon from "../images/frefolder.svg";
 import { useNavigate } from "react-router-dom";
-import { sleep } from "../utils/sleep";
+import { sleep } from "../functions/sleep";
 
 const Folder = ({ folder, update }) => {
   const [del, setDel] = useState(false);

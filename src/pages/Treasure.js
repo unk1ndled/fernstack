@@ -34,7 +34,6 @@ const Treasure = () => {
   const [bodyKey, setBodyKey] = useState(-1);
 
   const user = useAuth();
-  console.log(user.currentUser);
   const { currentUser } = useAuth();
   const { state: folder_ } = useLocation();
   const id_ = folder_ != null ? folder_.folder.id : null;
@@ -64,7 +63,6 @@ const Treasure = () => {
     onOpen();
     setLoading(true);
   };
-  console.log(currentUser);
   return (
     <div>
       <Nav></Nav>
@@ -102,12 +100,14 @@ const Treasure = () => {
         <Grid key={bodyKey}>
           <Body>
             <div className=" gap-4 grid grid-cols-2  sm:grid-cols-6">
-              {list.map((item, index) => (
-                <File key={index} item={item}>
-                  {" "}
-                  update ={reRenderBod}
-                </File>
-              ))}
+              {currentFolder &&
+                currentFolder.childFiles.map((item, index) => (
+                  <File
+                    key={index}
+                    file={item}
+                    update={reRenderBod}
+                  ></File>
+                ))}
               {currentFolder &&
                 currentFolder.childFolders.map((item, index) => (
                   <Folder

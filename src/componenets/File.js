@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import Coffre from "../images/Coffre.gif";
 import {
   Dropdown,
   DropdownTrigger,
@@ -9,41 +10,65 @@ import {
   CardFooter,
   Image,
   DropdownSection,
-
 } from "@nextui-org/react";
+const KILO_BYTE = 1024;
 
-const File = ({ item }) => {
-  const { img, size, title } = item;
-  
+const File = ({ file, update }) => {
+  const [pic, setPic] = useState();
+
+  useEffect(() => {
+    switch (file.type) {
+      case "images":
+        break;
+      case "pdfs":
+        break;
+      case "videos":
+        break;
+      default:
+        break;
+    }
+  }, [file]);
+
   return (
     <Dropdown backdrop="blur">
       <DropdownTrigger>
-        <Card
-          shadow="sm"
-          isPressable
-          onPress={() => console.log("item pressed")}
-        >
+        <Card shadow="sm" isPressable>
           <CardBody className="overflow-visible p-0">
             <Image
               shadow="sm"
               radius="lg"
               width="100%"
-              alt={title}
+              alt={file.name}
               className="w-full object-cover h-[140px]"
-              src={img}
+              src={Coffre}
             />
           </CardBody>
-          <CardFooter className="text-small justify-between">
-            <b>{title}</b>
-            <p className="text-default-500">{size}</p>
+          <CardFooter className="text-sm justify-between">
+            <b
+              style={{
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {file.name}
+            </b>
+            <p
+              style={{
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+              className="text-default-500"
+            >
+              {Math.floor(file.size / KILO_BYTE)} kb
+            </p>
           </CardFooter>
         </Card>
       </DropdownTrigger>
       <DropdownMenu variant="faded" aria-label="Dropdown menu with description">
         <DropdownSection title="Actions" showDivider>
-          <DropdownItem key="open"  >
-              Open file
-          </DropdownItem>
+          <DropdownItem key="open">Open file</DropdownItem>
           <DropdownItem key="copy" description="Copy the Folder link">
             Copy link
           </DropdownItem>

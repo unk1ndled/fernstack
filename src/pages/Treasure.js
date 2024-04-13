@@ -26,6 +26,7 @@ import { useLocation } from "react-router-dom";
 
 import { useFolder } from "../hooks/useFolder";
 import BreadCrumb from "../componenets/BreadCrumb";
+import LoginRequired from "../componenets/LoginRequired";
 
 const Treasure = () => {
   const [value, setValue] = useState(44);
@@ -63,64 +64,67 @@ const Treasure = () => {
     onOpen();
     setLoading(true);
   };
+  console.log(currentUser);
   return (
     <div>
-      <Nav></Nav>
-      <Divider></Divider>
-      <Container>
-        <Spacer y={4} />
-        <div className="flex items-center justify-start  text-purple-700 text-4xl font-mono h-12 w-100">
-          Treasure
-        </div>
-        <Spacer y={4} />
-        <Progress
-          aria-label="used capacity"
-          color="secondary"
-          isStriped
-          size="md"
-          value={value}
-          showValueLabel={true}
-          label="treasure used capacity"
-          className="max-w-md font-mono"
-        />
-        <Spacer y={4} />
-        <UploadButton onPress={Upload} isLoading={isLoading}></UploadButton>
-        <UploadModal
-          isOpen={isOpen}
-          currentFolder={folder}
-          onOpenChange={onOpenChange}
-          stopLoading={setLoading}
-          update={reRenderBod}
-        ></UploadModal>
-        <Spacer y={7} />
-        <div className="w-7/12 flex items-start ">
-          <BreadCrumb folder={folder}></BreadCrumb>
-        </div>
-        <Spacer y={3} />
-        <Grid key={bodyKey}>
-          <Body>
-            <div className=" gap-4 grid grid-cols-2  sm:grid-cols-6">
-              {currentFolder &&
-                currentFolder.childFiles.map((item, index) => (
-                  <File
-                    key={index}
-                    file={item}
-                    update={reRenderBod}
-                  ></File>
-                ))}
-              {currentFolder &&
-                currentFolder.childFolders.map((item, index) => (
-                  <Folder
-                    key={index}
-                    folder={item}
-                    update={reRenderBod}
-                  ></Folder>
-                ))}
-            </div>
-          </Body>
-        </Grid>
-      </Container>
-    </div>
+    {currentUser.uid ? (
+      <>
+        <Nav></Nav>
+        <Divider></Divider>
+        <Container>
+          <Spacer y={4} />
+          <div className="flex items-center justify-start  text-purple-700 text-4xl font-mono h-12 w-100">
+            Treasure
+          </div>
+          <Spacer y={4} />
+          <Progress
+            aria-label="used capacity"
+            color="secondary"
+            isStriped
+            size="md"
+            value={value}
+            showValueLabel={true}
+            label="treasure used capacity"
+            className="max-w-md font-mono"
+          />
+          <Spacer y={4} />
+          <UploadButton onPress={Upload} isLoading={isLoading}></UploadButton>
+          <UploadModal
+            isOpen={isOpen}
+            currentFolder={folder}
+            onOpenChange={onOpenChange}
+            stopLoading={setLoading}
+            update={reRenderBod}
+          ></UploadModal>
+          <Spacer y={7} />
+          <div className="w-7/12 flex items-start ">
+            <BreadCrumb folder={folder}></BreadCrumb>
+          </div>
+          <Spacer y={3} />
+          <Grid key={bodyKey}>
+            <Body>
+              <div className=" gap-4 grid grid-cols-2  sm:grid-cols-6">
+                {currentFolder &&
+                  currentFolder.childFiles.map((item, index) => (
+                    <File key={index} file={item} update={reRenderBod}></File>
+                  ))}
+                {currentFolder &&
+                  currentFolder.childFolders.map((item, index) => (
+                    <Folder
+                      key={index}
+                      folder={item}
+                      update={reRenderBod}
+                    ></Folder>
+                  ))}
+              </div>
+            </Body>
+          </Grid>
+        </Container> 
+      </>
+    ) : (
+      <LoginRequired>Error: User not authenticated</LoginRequired>
+    )}
+  </div>
   );
 };
 

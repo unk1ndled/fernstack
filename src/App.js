@@ -6,7 +6,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 import { NextUIProvider } from "@nextui-org/react";
-import { AuthProvider } from "./contexts/AuthContext";
+import { AuthProvider, useAuth } from "./contexts/AuthContext";
 
 import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
@@ -16,6 +16,7 @@ import Landing from "./pages/Landing";
 
 const App = () => {
   const navigate = useNavigate();
+  const user = useAuth();
 
   return (
     <AuthProvider>
@@ -29,7 +30,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
 
           {/* treasure */}
-          <Route path="/treasure" element={<Treasure />} />
+          <Route path="/treasure" element={<Treasure  />} />
           <Route path="/treasure/:treasureid" element={<Treasure />} />
 
           {/* profile */}

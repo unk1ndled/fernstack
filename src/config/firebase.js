@@ -39,14 +39,7 @@ export const database = {
   formatDoc: (doc) => {
     return { id: doc.id, ...doc.data() };
   },
-  initialiseRoot: async (id) => {
-    await addDoc(database.folders, {
-      name: "Root",
-      userId: id,
-      usedStr: 0,
-      createdAt: database.getCurrTime(),
-    });
-  },
+
 };
 
 export const googleProvider = new GoogleAuthProvider();

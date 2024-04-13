@@ -8,6 +8,7 @@ import Icon from "../images/logo.svg";
 import { Link, useNavigate } from "react-router-dom";
 // import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useAuth } from "../contexts/AuthContext";
+import { database } from "../config/firebase";
 
 const SignUp = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -43,6 +44,8 @@ const SignUp = () => {
       setError(error.code);
     }
   }
+
+
 
   const signInWithPopUp = async () => {
     try {

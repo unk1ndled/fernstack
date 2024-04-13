@@ -1,5 +1,5 @@
 import React, { Children, useContext, useEffect, useState } from "react";
-import { auth, googleProvider } from "../config/firebase";
+import { auth, database, googleProvider } from "../config/firebase";
 import {
   createUserWithEmailAndPassword,
   signInWithPopup,
@@ -14,7 +14,9 @@ export function useAuth() {
   return useContext(AuthContext);
 }
 
-const str = 999;
+const init = async (id) => {
+  database.initialiseRoot(id);
+};
 
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState();
@@ -29,7 +31,6 @@ export function AuthProvider({ children }) {
 
       await updateProfile(userCredential.user, {
         displayName: username,
-        storageUsage: str,
       });
       return userCredential.user;
     } catch (error) {

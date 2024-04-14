@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Coffre from "../images/Coffre.gif";
+import Docs from "../images/docs.svg";
+import Pdf from "../images/pdf.svg";
+import Video from "../images/video.svg";
+
 import {
   Dropdown,
   DropdownTrigger,
@@ -11,21 +15,26 @@ import {
   Image,
   DropdownSection,
 } from "@nextui-org/react";
+import { Hand } from "lucide-react";
 const KILO_BYTE = 1024;
 
 const File = ({ file, update }) => {
   const [pic, setPic] = useState();
 
+  console.log(file);
+
   useEffect(() => {
     switch (file.type) {
       case "images":
-        break;
+        return setPic(file.url);
       case "pdfs":
-        break;
+        return setPic(Pdf);
+      case "textfiles":
+        return setPic(Docs);
       case "videos":
-        break;
+        return setPic(Video);
       default:
-        break;
+        return setPic(Coffre);
     }
   }, [file]);
 
@@ -40,7 +49,7 @@ const File = ({ file, update }) => {
               width="100%"
               alt={file.name}
               className="w-full object-cover h-[140px]"
-              src={Coffre}
+              src={pic}
             />
           </CardBody>
           <CardFooter className="text-sm justify-between">

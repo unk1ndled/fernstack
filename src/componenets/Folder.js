@@ -13,8 +13,11 @@ import {
 } from "@nextui-org/react";
 
 import { deleteDoc, getDocs, query, where } from "firebase/firestore";
+import { storage } from "../config/firebase";
+import { useAuth } from "../contexts/AuthContext";
 
 import { database } from "../config/firebase";
+import { ref } from "firebase/storage";
 
 import FolderIcon from "../images/frefolder.svg";
 import { useNavigate } from "react-router-dom";
@@ -38,6 +41,23 @@ const Folder = ({ folder, update }) => {
     });
     //FILES
     deleteDoc(await database.getFolderRef(fId));
+  };
+
+  const shareFolder = () => {
+    //link
+
+    const link = `http://localhost:3000/treasure/${folder.id}`;
+    navigator.clipboard.writeText(link);
+    alert("Link copied to clipboard: ");
+
+    //ref f storage
+
+    // const fileref = ref(
+    //   storage,
+    //   `/files/${currentUser.uid}/${folder.path
+    //     .map((entry) => entry.name)
+    //     .join("/")}/${folder.name}`
+    // );
   };
 
   const delDoc = async () => {
@@ -78,7 +98,13 @@ const Folder = ({ folder, update }) => {
             Open
           </DropdownItem>
           <DropdownItem key="download">Download</DropdownItem>
-          <DropdownItem key="copy" description="Copy the Folder link">
+          <DropdownItem
+            key="copy"
+            description="Copy the Folder link"
+            onPress={() => {
+              shareFolder();
+            }}
+          >
             Copy link
           </DropdownItem>
         </DropdownSection>

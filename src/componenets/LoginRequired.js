@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "@nextui-org/react";
+import { Button, Navbar } from "@nextui-org/react";
 import Grid from "./Grid";
 import { useNavigate } from "react-router-dom";
 
@@ -18,7 +18,13 @@ const LoginRequired = () => {
           <div className="font-extrabold font-mono text-8xl text-secondary-200">
             Login first ok?
           </div>
-          <Button className = "text-4xl font-mono font-extralight text-danger-200" onPress={login} variant="light" size="lg" color="danger">
+          <Button
+            className="text-4xl font-mono font-extralight text-danger-200"
+            onPress={login}
+            variant="light"
+            size="lg"
+            color="danger"
+          >
             my fault og
           </Button>
         </div>

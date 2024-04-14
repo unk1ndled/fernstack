@@ -11,7 +11,12 @@ const BreadCrumb = ({ folder }) => {
   };
 
   return (
-    <Breadcrumbs size="lg" className="text-xl" color="secondary" variant="light">
+    <Breadcrumbs
+      size="lg"
+      className="text-xl"
+      color="secondary"
+      variant="light"
+    >
       <BreadcrumbItem href="/treasure">root</BreadcrumbItem>
 
       {folder != null &&
@@ -27,7 +32,9 @@ const BreadCrumb = ({ folder }) => {
           </BreadcrumbItem>
         ))}
       {folder && folder.name !== "Root" && (
-        <BreadcrumbItem href="/treasure">{folder.name}</BreadcrumbItem>
+        <BreadcrumbItem href={`/treasure/${folder.id}`}>
+          {folder.name}
+        </BreadcrumbItem>
       )}
     </Breadcrumbs>
   );

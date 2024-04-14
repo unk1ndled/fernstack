@@ -63,7 +63,7 @@ const UploadModal = (props) => {
 
   //side effect for renaming
   useEffect(() => {
-    if (fileName !== "") {
+    if (file && fileName !== "") {
       const updatedFile = new File([file], fileName, { type: file.type });
       setFile(updatedFile);
     }

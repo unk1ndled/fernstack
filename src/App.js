@@ -30,7 +30,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
 
           {/* treasure */}
-          <Route path="/treasure" element={<Treasure  />} />
+          <Route path="/treasure" element={<Treasure />} />
           <Route path="/treasure/:treasureid" element={<Treasure />} />
 
           {/* profile */}

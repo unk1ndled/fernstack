@@ -35,11 +35,14 @@ export const database = {
     return doc(db, "folders", id);
   },
 
+  getFileRef: async (id) => {
+    return doc(db, "files", id);
+  },
+
   getCurrTime: serverTimestamp,
   formatDoc: (doc) => {
     return { id: doc.id, ...doc.data() };
   },
-
 };
 
 export const googleProvider = new GoogleAuthProvider();

@@ -40,6 +40,7 @@ const Folder = ({ folder, update }) => {
       await deleteFolderAndSubFolders(subfolderId);
     });
     //FILES
+
     deleteDoc(await database.getFolderRef(fId));
   };
 
@@ -61,9 +62,13 @@ const Folder = ({ folder, update }) => {
   };
 
   const delDoc = async () => {
-    await deleteFolderAndSubFolders(folder.id);
-    await sleep(500);
-    update();
+    try {
+      await deleteFolderAndSubFolders(folder.id);
+      await sleep(500);
+      update();
+    } catch (error) {
+      alert(error);
+    }
   };
 
   return (
@@ -118,7 +123,7 @@ const Folder = ({ folder, update }) => {
               delDoc();
             }}
           >
-            Delete file
+            Delete folder
           </DropdownItem>
         </DropdownSection>
       </DropdownMenu>

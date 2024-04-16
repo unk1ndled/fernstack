@@ -23,11 +23,21 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { v4 } from "uuid";
-import { addDoc } from "firebase/firestore";
+import {
+  addDoc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+  writeBatch,
+} from "firebase/firestore";
 import { useAuth } from "../contexts/AuthContext";
 
 import { ROOT_FOLDER } from "../hooks/useFolder";
 import { sleep } from "../functions/sleep";
+import { updateStorage } from "../functions/updatestorage";
+import { getmaxstorage } from "../functions/getmaxstorage";
+import useStorage from "../hooks/useStorage";
 
 const types = [
   {
@@ -49,7 +59,7 @@ const types = [
 ];
 
 //2mb
-const MAX_UPLOAD_SIZE = "2097152";
+const MAX_UPLOAD_SIZE = Math.floor(getmaxstorage / 10);
 
 const UploadModal = (props) => {
   const { children, stopLoading, currentFolder, update, ...otherProps } = props;
@@ -58,8 +68,14 @@ const UploadModal = (props) => {
   const [folderName, setFolderName] = React.useState("");
   const [fileType, setFileType] = React.useState("textfiles");
   const [file, setFile] = React.useState(null);
-
   const { currentUser } = useAuth();
+
+  const resetModal = () => {
+    setSelected("");
+    setFileName("");
+    setFolderName("");
+    setFile(null);
+  };
 
   //side effect for renaming
   useEffect(() => {
@@ -106,11 +122,11 @@ const UploadModal = (props) => {
   };
 
   const uploadFile = async () => {
-    // if (file === null) return;
-    // if (file.size > MAX_UPLOAD_SIZE) {
-    //   alert("file too big");
-    //   return;
-    // }
+    if (file === null) return;
+    if (file.size > MAX_UPLOAD_SIZE) {
+      alert("file too big");
+      return;
+    }
     const filePath =
       currentFolder === ROOT_FOLDER
         ? `${currentFolder.path.map((entry) => entry.name).join("/")}/${
@@ -150,6 +166,8 @@ const UploadModal = (props) => {
             size: file.size,
             type: fileType,
             createdAt: database.getCurrTime(),
+          }).then(() => {
+            updateStorage("add", file.size, currentUser.uid);
           });
         });
       }
@@ -160,13 +178,12 @@ const UploadModal = (props) => {
     if (selected === "file") {
       uploadFile();
     } else if (selected === "folder") {
-      uploadFolder().then(() => {
-        update();
-      });
+      uploadFolder();
     }
     action();
     await sleep(3000); // Sleep for 2 seconds
-    stopLoading();
+    resetModal();
+    update();
   };
 
   return (

@@ -1,4 +1,5 @@
 import React from "react";
+import { useState } from "react";
 import NavUser from "../componenets/NavUser";
 import {
   Spacer,
@@ -11,13 +12,30 @@ import {
   CardFooter,
   Button,
   Chip,
+  useDisclosure,
 } from "@nextui-org/react";
 import Pfp from "../images/frerein.jpg";
 import { useAuth } from "../contexts/AuthContext";
+
 import LoginRequired from "../componenets/LoginRequired";
+import ProfileModal from "../componenets/ProfileModal";
 
 const Profile = () => {
   const { currentUser } = useAuth();
+  const [visible, setVisible] = useState(false);
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+
+  const Upload = () => {
+    onOpen();
+    // console.log("hi");
+    //setLoading(true);
+  };
+
+  const reRenderBod = () => {
+    window.location.reload();
+  };
+
   return (
     <>
       {currentUser.uid ? (
@@ -40,10 +58,17 @@ const Profile = () => {
                   }
                 />
               </Tooltip>
+              <ProfileModal
+                isOpen={isOpen} // Pass isOpen state
+                onOpenChange={onOpenChange} // Pass onOpenChange function
+                // stopLoading={setLoading}
+                update={reRenderBod}
+              ></ProfileModal>
               <Spacer y={3} />
               <Tooltip placement="bottom" content="update profile">
                 <Card
                   isPressable
+                  onPress={Upload}
                   className=" text-secondary flex flex-col items-center p-2"
                 >
                   <div>{currentUser.displayName}</div>

@@ -13,6 +13,7 @@ import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import Treasure from "./pages/Treasure";
 import Landing from "./pages/Landing";
+import ProfileModal from "./componenets/ProfileModal";
 
 const App = () => {
   const navigate = useNavigate();

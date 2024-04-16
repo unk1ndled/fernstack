@@ -38,6 +38,12 @@ export function AuthProvider({ children }) {
     }
   }
 
+  function updateUsername(newUsername) {
+    updateProfile(auth.currentUser, { displayName: newUsername })
+      .then(() => console.log("profile nade canadi"))
+      .catch((e) => console.log("profile pic not updated"));
+  }
+
   function login(email, password) {
     return signInWithEmailAndPassword(auth, email, password);
   }
@@ -57,14 +63,15 @@ export function AuthProvider({ children }) {
     return unsubscribe;
   }, []);
 
-  const { uid, displayName, email, photoURL, storageUsage } = currentUser || {};
+  const { uid, displayName, email, photoURL } = currentUser || {};
 
   const value = {
-    currentUser: { uid, displayName, email, photoURL, storageUsage },
+    currentUser: { uid, displayName, email, photoURL },
     signup,
     signInWithGoogle,
     login,
     logout,
+    updateUsername,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

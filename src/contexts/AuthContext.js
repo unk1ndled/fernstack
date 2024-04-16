@@ -7,6 +7,7 @@ import {
   signOut,
   updateProfile,
 } from "firebase/auth";
+import { getDoc, getDocs, query, where } from "firebase/firestore";
 
 const AuthContext = React.createContext();
 
@@ -32,6 +33,9 @@ export function AuthProvider({ children }) {
       await updateProfile(userCredential.user, {
         displayName: username,
       });
+
+      await database.initUserDoc(userCredential.user.uid);
+
       return userCredential.user;
     } catch (error) {
       console.log(error);
@@ -53,7 +57,19 @@ export function AuthProvider({ children }) {
   }
 
   async function signInWithGoogle() {
-    await signInWithPopup(auth, googleProvider);
+    const result = await signInWithPopup(auth, googleProvider);
+    if (result.user) {
+      const user = result.user;
+      const q = query(database.users, where("userId", "==", user.uid));
+      try {
+        const querySnapshot = await getDocs(q);
+        if (querySnapshot.empty) {
+          database.initUserDoc(user.uid);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
   }
 
   useEffect(() => {

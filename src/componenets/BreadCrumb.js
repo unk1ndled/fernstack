@@ -23,6 +23,7 @@ const BreadCrumb = ({ folder }) => {
         folder.path !== undefined &&
         folder.path.map((fold, index) => (
           <BreadcrumbItem
+            key={fold.id}
             onPress={() => {
               navToFolder(fold);
             }}

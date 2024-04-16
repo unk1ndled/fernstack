@@ -21,7 +21,6 @@ const Login = () => {
   const [error, setError] = useState();
 
   const { login, signInWithGoogle } = useAuth();
-  console.log(error);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -31,7 +30,7 @@ const Login = () => {
       await login(emailRef.current.value, passwordRef.current.value);
       navigate("/treasure");
     } catch (error) {
-      setError("An error occurred while verifying your account.");
+      setError(error);
     }
   }
 

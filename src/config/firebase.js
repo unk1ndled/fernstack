@@ -30,6 +30,7 @@ const db = getFirestore(app);
 export const database = {
   folders: collection(db, "folders"),
   files: collection(db, "files"),
+  users: collection(db, "users"),
 
   getFolderRef: async (id) => {
     return doc(db, "folders", id);
@@ -39,6 +40,17 @@ export const database = {
     return doc(db, "files", id);
   },
 
+  getUserRef: async (id) => {
+    return doc(db, "users", id);
+  },
+  
+  initUserDoc: async (uid) => {
+    addDoc(database.users, {
+      userId: uid,
+      usedStorage: 0,
+      createdAt: database.getCurrTime(),
+    });
+  },
   getCurrTime: serverTimestamp,
   formatDoc: (doc) => {
     return { id: doc.id, ...doc.data() };

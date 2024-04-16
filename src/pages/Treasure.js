@@ -1,65 +1,44 @@
 import React from "react";
-import { useEffect, useState } from "react";
-
 import styled from "styled-components";
-import {
-  Divider,
-  Progress,
-  Spacer,
-  Breadcrumbs,
-  BreadcrumbItem,
-  useDisclosure,
-} from "@nextui-org/react";
-
-import Coffre from "../images/Coffre.gif";
-import Frerein from "../images/frieren.gif";
-import Fern from "../images/fern-eating-grapes-sour-grapes.gif";
-
 import File from "../componenets/File";
 import Nav from "../componenets/NavUser";
 import Folder from "../componenets/Folder";
-import UploadButton from "../componenets/UploadButton";
-import UploadModal from "../componenets/UploadModal";
-import { useAuth } from "../contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
-
+import { useEffect, useState } from "react";
 import { useFolder } from "../hooks/useFolder";
+import { useLocation } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 import BreadCrumb from "../componenets/BreadCrumb";
+import UploadModal from "../componenets/UploadModal";
+import UploadButton from "../componenets/UploadButton";
 import LoginRequired from "../componenets/LoginRequired";
+import { Divider, Progress, Spacer, useDisclosure } from "@nextui-org/react";
+import useStorage from "../hooks/useStorage";
+import { getmaxstorage } from "../functions/getmaxstorage";
+import { getusedstorage } from "../functions/updatestorage";
+import { sleep } from "../functions/sleep";
 
 const Treasure = () => {
-  const [value, setValue] = useState(44);
+  const [value, setValue] = useState(0);
+  const [usedStorage, setUsedStorage] = useState(0);
+
   const [isLoading, setLoading] = useState(false);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [bodyKey, setBodyKey] = useState(-1);
 
-  const user = useAuth();
   const { currentUser } = useAuth();
   const { state: folder_ } = useLocation();
   const id_ = folder_ != null ? folder_.folder.id : null;
   const currentFolder = useFolder(id_, folder_);
   const folder = currentFolder.folder;
 
-  const list = [
-    {
-      title: "frerein",
-      img: Frerein,
-      size: "1mb",
-    },
-    {
-      title: "Fern",
-      img: Fern,
-      size: "20gb",
-    },
-    {
-      title: "mimic",
-      img: Coffre,
-      size: "7gb",
-    },
-  ];
+  useEffect(() => {
+    const initused = async () => {
+      setUsedStorage(await getusedstorage(currentUser.uid));
+    };
+    sleep(500).then(() => {
+      initused();
+    });
+  }, [currentUser]);
 
-  // console.log(currentUser);
   const reRenderBod = () => {
     window.location.reload();
   };
@@ -68,7 +47,10 @@ const Treasure = () => {
     setLoading(true);
   };
 
-  // console.log(currentUser);
+
+  useEffect(() => {
+    setValue((usedStorage / getmaxstorage()) * 100);
+  }, [usedStorage]);
 
   return (
     <div>
@@ -106,7 +88,7 @@ const Treasure = () => {
               <BreadCrumb folder={folder}></BreadCrumb>
             </div>
             <Spacer y={3} />
-            <Grid key={bodyKey}>
+            <Grid>
               <Body>
                 <div className=" gap-4 grid grid-cols-2  sm:grid-cols-6">
                   {currentFolder &&

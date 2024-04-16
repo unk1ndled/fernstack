@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Coffre from "../images/Coffre.gif";
-import Docs from "../images/docs.svg";
+import Doc from "../images/file.svg";
 import Pdf from "../images/pdf.svg";
 import Video from "../images/video.svg";
 
@@ -21,8 +21,6 @@ const KILO_BYTE = 1024;
 const File = ({ file, update }) => {
   const [pic, setPic] = useState();
 
-  console.log(file);
-
   useEffect(() => {
     switch (file.type) {
       case "images":
@@ -30,7 +28,7 @@ const File = ({ file, update }) => {
       case "pdfs":
         return setPic(Pdf);
       case "textfiles":
-        return setPic(Docs);
+        return setPic(Doc);
       case "videos":
         return setPic(Video);
       default:
@@ -52,7 +50,7 @@ const File = ({ file, update }) => {
               src={pic}
             />
           </CardBody>
-          <CardFooter className="text-sm justify-between">
+          <CardFooter className="text-sm justify-evenly">
             <b
               style={{
                 overflow: "hidden",
@@ -78,7 +76,7 @@ const File = ({ file, update }) => {
       <DropdownMenu variant="faded" aria-label="Dropdown menu with description">
         <DropdownSection title="Actions" showDivider>
           <DropdownItem key="open">Open file</DropdownItem>
-          <DropdownItem key="copy" description="Copy the Folder link">
+          <DropdownItem key="copy" description="Copy the file link">
             Copy link
           </DropdownItem>
           <DropdownItem key="download" description="">

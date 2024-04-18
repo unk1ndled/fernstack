@@ -43,9 +43,15 @@ export function AuthProvider({ children }) {
   }
 
   function updateUsername(newUsername) {
-    updateProfile(auth.currentUser, { displayName: newUsername })
-      .then(() => console.log("profile nade canadi"))
-      .catch((e) => console.log("profile pic not updated"));
+    updateProfile(auth.currentUser, { displayName: newUsername }).catch((e) =>
+      console.log("profile uesrname not updated")
+    );
+  }
+
+  function updatePhotoUrl(url) {
+    updateProfile(auth.currentUser, { photoURL: url }).catch((e) =>
+      console.log("profile pic not updated")
+    );
   }
 
   function login(email, password) {
@@ -88,6 +94,7 @@ export function AuthProvider({ children }) {
     login,
     logout,
     updateUsername,
+    updatePhotoUrl,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

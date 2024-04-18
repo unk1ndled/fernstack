@@ -8,9 +8,13 @@ import {
   Button,
   Input,
 } from "@nextui-org/react";
-import { ref, uploadBytesResumable, uploadBytes } from "firebase/storage";
+import {
+  ref,
+  uploadBytesResumable,
+  uploadBytes,
+  getDownloadURL,
+} from "firebase/storage";
 import { database, storage } from "../config/firebase";
-
 
 import { useAuth } from "../contexts/AuthContext";
 
@@ -19,7 +23,7 @@ export default function ProfileModal(props) {
   const [fileName, setFileName] = useState("");
   const [newUsername, setNewUsername] = useState("");
   const [file, setFile] = useState(null);
-  const { currentUser ,updateUsername } = useAuth();
+  const { currentUser, updateUsername, updatePhotoUrl } = useAuth();
 
   // console.log(currentUser);
 
@@ -31,22 +35,35 @@ export default function ProfileModal(props) {
     setFile(updatedFile);
     console.log(updatedFile);
   };
-
   const uploadFile = async () => {
-    console.log(file);
-    const fileref = ref(storage, `/pfp/${currentUser.uid} `);
-    const uploadTask = uploadBytes(fileref, file);
+    try {
+      const fileref = ref(storage, `/pfp/${currentUser.uid}`);
+      const uploadTask = uploadBytes(fileref, file);
+
+      // Wait for the upload task to complete
+      const snapshot = await uploadTask;
+
+      // Get the download URL of the uploaded file
+      const downloadURL = await getDownloadURL(snapshot.ref);
+      // console.log(downloadURL)
+
+      // Call the updatePhotoUrl function with the download URL
+      updatePhotoUrl(downloadURL);
+    } catch (error) {
+      console.error("Error uploading file:", error);
+    }
   };
 
-
-
   const confirmUpload = (action) => {
-    uploadFile();
+    if (file) {
+      uploadFile();
+    }
+
     if (newUsername !== "") {
       updateUsername(newUsername);
     }
     action();
-    console.log(file);
+    window.location.reload();
   };
 
   //cancel

@@ -3,6 +3,8 @@ import Coffre from "../images/Coffre.gif";
 import Doc from "../images/file.svg";
 import Pdf from "../images/pdf.svg";
 import Video from "../images/video.svg";
+import { database, storage } from "../config/firebase";
+
 
 import {
   Dropdown,
@@ -35,6 +37,11 @@ const File = ({ file, update }) => {
         return setPic(Coffre);
     }
   }, [file]);
+
+  const deleteFile = () => {
+
+
+  };
 
   return (
     <Dropdown backdrop="blur">

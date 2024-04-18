@@ -39,6 +39,7 @@ const Treasure = () => {
     });
   }, [currentUser]);
 
+
   const reRenderBod = () => {
     window.location.reload();
   };
@@ -46,7 +47,6 @@ const Treasure = () => {
     onOpen();
     setLoading(true);
   };
-
 
   useEffect(() => {
     setValue((usedStorage / getmaxstorage()) * 100);

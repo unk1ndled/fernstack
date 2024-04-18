@@ -13,6 +13,7 @@ import {
   uploadBytesResumable,
   uploadBytes,
   getDownloadURL,
+  deleteObject,
 } from "firebase/storage";
 import { database, storage } from "../config/firebase";
 
@@ -35,19 +36,15 @@ export default function ProfileModal(props) {
     setFile(updatedFile);
     console.log(updatedFile);
   };
+
   const uploadFile = async () => {
     try {
       const fileref = ref(storage, `/pfp/${currentUser.uid}`);
+      deleteObject(fileref);
+
       const uploadTask = uploadBytes(fileref, file);
-
-      // Wait for the upload task to complete
       const snapshot = await uploadTask;
-
-      // Get the download URL of the uploaded file
       const downloadURL = await getDownloadURL(snapshot.ref);
-      // console.log(downloadURL)
-
-      // Call the updatePhotoUrl function with the download URL
       updatePhotoUrl(downloadURL);
     } catch (error) {
       console.error("Error uploading file:", error);
@@ -55,8 +52,10 @@ export default function ProfileModal(props) {
   };
 
   const confirmUpload = (action) => {
-    if (file) {
+    if (file && file.type.statsWith("image/")) {
       uploadFile();
+    } else {
+      alert("Enter a Valid image format");
     }
 
     if (newUsername !== "") {

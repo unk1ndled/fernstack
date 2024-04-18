@@ -45,9 +45,7 @@ const Folder = ({ folder, update }) => {
   };
 
   const shareFolder = () => {
-    //link
-
-    const link = `http://localhost:3000/treasure/${folder.id}`;
+     const link = `http://localhost:3000/treasure/${folder.id}`;
     navigator.clipboard.writeText(link);
     alert("Link copied to clipboard: ");
 

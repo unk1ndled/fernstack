@@ -38,7 +38,7 @@ export const getusedstorage = async (uid) => {
   try {
     const storedUsedStorage = localStorage.getItem("usedStorage");
     if (storedUsedStorage != null) {
-      console.log("local")
+      //console.log("local")
       return storedUsedStorage;
     }
 

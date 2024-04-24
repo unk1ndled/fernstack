@@ -40,7 +40,6 @@ const Folder = ({ folder, update }) => {
       await deleteFolderAndSubFolders(subfolderId);
     });
     //FILES
-
     deleteDoc(await database.getFolderRef(fId));
   };
 
@@ -51,7 +50,7 @@ const Folder = ({ folder, update }) => {
 
     //ref f storage
 
-    // const fileref = ref(
+    // const folderRef = ref(
     //   storage,
     //   `/files/${currentUser.uid}/${folder.path
     //     .map((entry) => entry.name)

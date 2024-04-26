@@ -27,7 +27,20 @@ const Treasure = () => {
   const { state: folder_ } = useLocation();
   const id_ = folder_ != null ? folder_.folder.id : null;
   const currentFolder = useFolder(id_, folder_);
+  // const [fullPath, setFullPath] = useState("");
+
   const folder = currentFolder.folder;
+
+  // useEffect(() => {
+  //   if (folder && folder.path) {
+  //     const newPath = `${currentUser.uid}/${folder.path
+  //       .map((item) => item.name)
+  //       .join("/")}/${folder.id}`;
+
+  //     setFullPath(newPath);
+  //     console.log(fullPath);
+  //   }
+  // }, [folder]);
 
   useEffect(() => {
     const initused = async () => {
@@ -37,7 +50,6 @@ const Treasure = () => {
       initused();
     });
   }, [currentUser]);
-
 
   const reRenderBod = () => {
     window.location.reload();
@@ -59,7 +71,7 @@ const Treasure = () => {
           <Divider></Divider>
           <Container>
             <Spacer y={4} />
-            <div className="flex items-center justify-start  text-purple-700 text-4xl font-mono h-12 w-100">
+            <div className="flex items-center justify-start text-purple-700 text-4xl font-mono h-12 w-100">
               Treasure
             </div>
             <Spacer y={4} />
@@ -92,7 +104,12 @@ const Treasure = () => {
                 <div className=" gap-4 grid grid-cols-2  sm:grid-cols-6">
                   {currentFolder &&
                     currentFolder.childFiles.map((item, index) => (
-                      <File key={index} file={item} update={reRenderBod}></File>
+                      <File
+                        key={index}
+                        file={item}
+                        update={reRenderBod}
+                        currentFolder={folder}
+                      ></File>
                     ))}
                   {currentFolder &&
                     currentFolder.childFolders.map((item, index) => (

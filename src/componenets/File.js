@@ -4,7 +4,10 @@ import Doc from "../images/file.svg";
 import Pdf from "../images/pdf.svg";
 import Video from "../images/video.svg";
 import { database, storage } from "../config/firebase";
+import { getStorage, ref, deleteObject } from "firebase/storage";
+import { doc, deleteDoc } from "firebase/firestore";
 
+import { ROOT_FOLDER } from "../hooks/useFolder";
 
 import {
   Dropdown,
@@ -18,9 +21,11 @@ import {
   DropdownSection,
 } from "@nextui-org/react";
 import { Hand } from "lucide-react";
+import { useAuth } from "../contexts/AuthContext";
+
 const KILO_BYTE = 1024;
 
-const File = ({ file, update }) => {
+const File = ({ file, currentFolder, update }) => {
   const [pic, setPic] = useState();
 
   useEffect(() => {
@@ -38,10 +43,27 @@ const File = ({ file, update }) => {
     }
   }, [file]);
 
-  const deleteFile = () => {
+  
 
-
+  const deleteFile = async () => {
+    try {
+      await deleteDoc(doc(database.files, file.id));
+      const deleteFileRef = ref(storage, file.url);
+      console.log(deleteFileRef);
+      await deleteObject(deleteFileRef)
+        .then(() => {
+          update();
+        })
+        .catch((error) => {
+          alert("Service error XoX");
+        });
+    } catch (error) {
+      console.error("Error deleting file:", error);
+    }
   };
+
+
+
 
   return (
     <Dropdown backdrop="blur">
@@ -96,6 +118,7 @@ const File = ({ file, update }) => {
             className="text-danger"
             color="danger"
             description="Permanently delete the file"
+            onPress={() => deleteFile()}
           >
             Delete file
           </DropdownItem>

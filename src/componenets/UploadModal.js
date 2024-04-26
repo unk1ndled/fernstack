@@ -22,7 +22,9 @@ import {
   uploadBytes,
   uploadBytesResumable,
 } from "firebase/storage";
+
 import { v4 } from "uuid";
+
 import {
   addDoc,
   getDocs,
@@ -31,6 +33,7 @@ import {
   where,
   writeBatch,
 } from "firebase/firestore";
+
 import { useAuth } from "../contexts/AuthContext";
 
 import { ROOT_FOLDER } from "../hooks/useFolder";
@@ -121,22 +124,32 @@ const UploadModal = (props) => {
     });
   };
 
+
+  // EXPORTABLE TO BE USED WHILE DELETING CHILD FILES IN STORAGE SERVICE
+  const getParentFolder = () => {
+    if (currentFolder.path.length > 0) {
+      return `${currentFolder.path.map((entry) => entry.name).join("/")}/`;
+    } else {
+      return "";
+    }
+  };
+
   const uploadFile = async () => {
     if (file === null) return;
     if (file.size > MAX_UPLOAD_SIZE) {
       alert("file too big");
       return;
     }
+    const UNIQUE_FILENAME = v4() + file.name;
     const filePath =
       currentFolder === ROOT_FOLDER
-        ? `${currentFolder.path.map((entry) => entry.name).join("/")}/${
-            v4() + file.name
-          }`
-        : `${currentFolder.path.map((entry) => entry.name).join("/")}/${
-            currentFolder.name
-          }/${v4() + file.name}`;
+        ? `${UNIQUE_FILENAME}`
+        : `${getParentFolder()}${currentFolder.name}/${UNIQUE_FILENAME}`;
 
-    const fileref = ref(storage, `/files/${currentUser.uid}/${filePath} `);
+    // console.log(`/files/${currentUser.uid}/${filePath}`);
+    const fileref = ref(storage, `files/${currentUser.uid}/${filePath}`);
+
+    console.log(fileref);
     const uploadTask = uploadBytesResumable(fileref, file);
     uploadTask.on(
       "state_changed",
@@ -165,6 +178,7 @@ const UploadModal = (props) => {
             userId: currentUser.uid,
             size: file.size,
             type: fileType,
+            // Hall of shame fileref: "files/" + currentUser.uid + "/" + filePath,
             createdAt: database.getCurrTime(),
           }).then(() => {
             updateStorage("add", file.size, currentUser.uid);

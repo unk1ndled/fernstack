@@ -41,6 +41,7 @@ import { sleep } from "../functions/sleep";
 import { updateStorage } from "../functions/updatestorage";
 import { getmaxstorage } from "../functions/getmaxstorage";
 import useStorage from "../hooks/useStorage";
+import { FaP } from "react-icons/fa6";
 
 const types = [
   {
@@ -65,7 +66,15 @@ const types = [
 const MAX_UPLOAD_SIZE = 10 * 1024 * 1024;
 
 const UploadModal = (props) => {
-  const { children, stopLoading, currentFolder, update, ...otherProps } = props;
+  const {
+    children,
+    setUploadProgress,
+    stopLoading,
+    currentFolder,
+    setShowUpload,
+    update,
+    ...otherProps
+  } = props;
   const [selected, setSelected] = React.useState("");
   const [fileName, setFileName] = React.useState("");
   const [folderName, setFolderName] = React.useState("");
@@ -126,7 +135,6 @@ const UploadModal = (props) => {
     });
   };
 
-  // EXPORTABLE TO BE USED WHILE DELETING CHILD FILES IN STORAGE SERVICE
   const getParentFolder = () => {
     if (currentFolder.path.length > 0) {
       return `${currentFolder.path.map((entry) => entry.name).join("/")}/`;
@@ -156,17 +164,18 @@ const UploadModal = (props) => {
       (snapshot) => {
         const progress =
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log("Upload is " + progress + "% done");
-        switch (snapshot.state) {
-          case "paused":
-            console.log("Upload is paused");
-            break;
-          case "running":
-            console.log("Upload is running");
-            break;
-          default:
-            console.log("first");
-        }
+        //toast progress
+        setUploadProgress(progress);
+        // switch (snapshot.state) {
+        //   case "paused":
+        //     console.log("Upload is paused");
+        //     break;
+        //   case "running":
+        //     console.log("Upload is running");
+        //     break;
+        //   default:
+        //     console.log("first");
+        // }
       },
       (error) => {},
       () => {
@@ -190,15 +199,19 @@ const UploadModal = (props) => {
     );
   };
   const confirmUpload = async (action) => {
-    let uploadPromise;
-    if (selected === "file") {
-      uploadPromise = uploadFile();
-    } else if (selected === "folder") {
-      uploadPromise = uploadFolder();
+    //the user has to pick something to upload first
+    if (fileName !== "" || folderName !== "") {
+      let uploadPromise;
+      if (selected === "file") {
+        uploadPromise = uploadFile();
+      } else if (selected === "folder") {
+        uploadPromise = uploadFolder();
+      }
+      action();
+      setShowUpload(true);
+      resetModal();
+      await uploadPromise;
     }
-    action();
-    resetModal();
-    await uploadPromise;
   };
 
   return (

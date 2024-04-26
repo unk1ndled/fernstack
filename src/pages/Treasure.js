@@ -15,11 +15,14 @@ import LoginRequired from "../componenets/LoginRequired";
 import { getmaxstorage } from "../functions/getmaxstorage";
 import { getusedstorage } from "../functions/getusedstorage";
 import { Divider, Progress, Spacer, useDisclosure } from "@nextui-org/react";
+import Toast from "../componenets/Toast";
 
 const Treasure = () => {
   const [value, setValue] = useState(0);
   const [usedStorage, setUsedStorage] = useState(0);
   const [isLoading, setLoading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(-1);
+  const [showUpload, setShowUpload] = useState(false);
 
   const { currentUser } = useAuth();
   const { state: folder_ } = useLocation();
@@ -39,9 +42,10 @@ const Treasure = () => {
     });
   }, [currentUser]);
 
-  const reRenderBod = () => {
+  const refreshChildren = () => {
     refresh();
     setLoading(false);
+    setShowUpload(false);
   };
   const Upload = () => {
     onOpen();
@@ -77,17 +81,21 @@ const Treasure = () => {
             <Spacer y={4} />
             <UploadButton onPress={Upload} isLoading={isLoading}></UploadButton>
             <UploadModal
+              setShowUpload={setShowUpload}
               isOpen={isOpen}
               currentFolder={folder}
               onOpenChange={onOpenChange}
+              setUploadProgress={setUploadProgress}
               stopLoading={setLoading}
-              update={reRenderBod}
+              update={refreshChildren}
             ></UploadModal>
             <Spacer y={7} />
             <div className="w-7/12 flex items-start ">
               <BreadCrumb folder={folder}></BreadCrumb>
             </div>
             <Spacer y={3} />
+            {/* upload toast */}
+            {isLoading && showUpload && <Toast value={uploadProgress}></Toast>}
             <Grid>
               <Body>
                 <div className=" gap-4 grid grid-cols-2  sm:grid-cols-6">
@@ -96,7 +104,7 @@ const Treasure = () => {
                       <File
                         key={index}
                         file={item}
-                        update={reRenderBod}
+                        update={refreshChildren}
                         currentFolder={folder}
                       ></File>
                     ))}
@@ -105,7 +113,7 @@ const Treasure = () => {
                       <Folder
                         key={index}
                         folder={item}
-                        update={reRenderBod}
+                        update={refreshChildren}
                       ></Folder>
                     ))}
                 </div>

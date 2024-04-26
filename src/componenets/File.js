@@ -22,11 +22,13 @@ import {
 } from "@nextui-org/react";
 import { Hand } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
+import { updateStorage } from "../functions/updatestorage";
 
 const KILO_BYTE = 1024;
 
 const File = ({ file, currentFolder, update }) => {
   const [pic, setPic] = useState();
+  const { currentUser } = useAuth();
 
   useEffect(() => {
     switch (file.type) {
@@ -43,27 +45,23 @@ const File = ({ file, currentFolder, update }) => {
     }
   }, [file]);
 
-  
-
   const deleteFile = async () => {
     try {
       await deleteDoc(doc(database.files, file.id));
-      const deleteFileRef = ref(storage, file.url);
-      console.log(deleteFileRef);
-      await deleteObject(deleteFileRef)
+      const fileRef = ref(storage, file.url);
+      await deleteObject(fileRef)
         .then(() => {
-          update();
+          updateStorage("subtract", file.size, currentUser.uid).then(() => {
+            update();
+          });
         })
         .catch((error) => {
           alert("Service error XoX");
         });
     } catch (error) {
-      console.error("Error deleting file:", error);
+      // console.error("Error deleting file:", error);
     }
   };
-
-
-
 
   return (
     <Dropdown backdrop="blur">

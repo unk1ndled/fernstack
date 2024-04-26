@@ -31,17 +31,13 @@ export default function ProfileModal(props) {
   //Locally uploading the folder
   const handleFileLocalUpload = (event) => {
     const file = event.target.files[0];
-    setFileName(currentUser.uid);
-    const updatedFile = new File([file], fileName, { type: file.type });
-    setFile(updatedFile);
-    console.log(updatedFile);
+    setFile(file);
   };
 
   const uploadFile = async () => {
     try {
       const fileref = ref(storage, `/pfp/${currentUser.uid}`);
       deleteObject(fileref);
-
       const uploadTask = uploadBytes(fileref, file);
       const snapshot = await uploadTask;
       const downloadURL = await getDownloadURL(snapshot.ref);
@@ -65,10 +61,8 @@ export default function ProfileModal(props) {
     window.location.reload();
   };
 
-  //cancel
   const cancel = (action) => {
     action();
-    //stopLoading();
   };
 
   return (

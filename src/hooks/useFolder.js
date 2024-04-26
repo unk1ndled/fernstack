@@ -54,18 +54,15 @@ export function useFolder(folderId = null, folder = null) {
     dispatch({ type: ACTIONS.SELECT_FOLDER, payload: { folderId, folder } });
   }, [folderId, folder]);
 
-  useEffect(() => {
+  const refreshFolder = () => {
     if (folderId == null) {
       return dispatch({
         type: ACTIONS.UPDATE_FOLDER,
         payload: { folder: ROOT_FOLDER },
       });
     }
-    database
-      .getFolderRef(folderId)
-      .then(async (docRef) => {
-        return await getDoc(docRef);
-      })
+
+    getDoc(database.getFolderRef(folderId))
       .then((doc) => {
         dispatch({
           type: ACTIONS.UPDATE_FOLDER,
@@ -75,58 +72,53 @@ export function useFolder(folderId = null, folder = null) {
       .catch((e) => {
         console.log(e);
       });
+  };
+
+  useEffect(() => {
+    refreshFolder();
   }, [folderId]);
 
-  useEffect(() => {
-    const setChildren = async () => {
-      const q = query(
-        database.folders,
-        where("parentId", "==", folderId),
-        where("userId", "==", currentUser.uid)
-      );
-      const querySnapshot = await getDocs(q);
-      dispatch({
-        type: ACTIONS.SET_CHILD_FOLDERS,
-        payload: { childFolders: querySnapshot.docs.map(database.formatDoc) },
-      });
-    };
-    if (currentUser && currentUser.uid) {
-      setChildren();
-    }
-  }, [folderId, currentUser]);
+  const setChildFolders = async () => {
+    const q = query(
+      database.folders,
+      where("parentId", "==", folderId),
+      where("userId", "==", currentUser.uid)
+    );
+    const querySnapshot = await getDocs(q);
+    dispatch({
+      type: ACTIONS.SET_CHILD_FOLDERS,
+      payload: { childFolders: querySnapshot.docs.map(database.formatDoc) },
+    });
+  };
 
   useEffect(() => {
-    const setChildFolders = async () => {
-      const q = query(
-        database.files,
-        where("folderId", "==", folderId),
-        where("userId", "==", currentUser.uid)
-      );
-      const querySnapshot = await getDocs(q);
-      dispatch({
-        type: ACTIONS.SET_CHILD_FILES,
-        payload: { childFiles: querySnapshot.docs.map(database.formatDoc) },
-      });
-    };
     if (currentUser && currentUser.uid) {
       setChildFolders();
     }
   }, [folderId, currentUser]);
 
-  // useEffect(() => {
-  //   return (
-  //     database.files
-  //       .where("folderId", "==", folderId)
-  //       .where("userId", "==", currentUser.uid)
-  //       // .orderBy("createdAt")
-  //       .onSnapshot((snapshot) => {
-  //         dispatch({
-  //           type: ACTIONS.SET_CHILD_FILES,
-  //           payload: { childFiles: snapshot.docs.map(database.formatDoc) },
-  //         });
-  //       })
-  //   );
-  // }, [folderId, currentUser]);
+  const setChildFiles = async () => {
+    const q = query(
+      database.files,
+      where("folderId", "==", folderId),
+      where("userId", "==", currentUser.uid)
+    );
+    const querySnapshot = await getDocs(q);
+    dispatch({
+      type: ACTIONS.SET_CHILD_FILES,
+      payload: { childFiles: querySnapshot.docs.map(database.formatDoc) },
+    });
+  };
+  useEffect(() => {
+    if (currentUser && currentUser.uid) {
+      setChildFiles();
+    }
+  }, [folderId, currentUser]);
 
-  return state;
+  const refreshChildren = async () => {
+    setChildFolders();
+    setChildFiles();
+  };
+
+  return { ...state, refreshChildren };
 }

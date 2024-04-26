@@ -1,7 +1,6 @@
 import React from "react";
 import Nav from "../componenets/Nav";
 import Grid from "../componenets/Grid";
-import { useRef } from "react";
 
 const Landing = () => {
   return (

@@ -62,7 +62,7 @@ const types = [
 ];
 
 //2mb
-const MAX_UPLOAD_SIZE = Math.floor(getmaxstorage / 10);
+const MAX_UPLOAD_SIZE = 10 * 1024 * 1024;
 
 const UploadModal = (props) => {
   const { children, stopLoading, currentFolder, update, ...otherProps } = props;
@@ -121,9 +121,10 @@ const UploadModal = (props) => {
       userId: currentUser.uid,
       path: path,
       createdAt: database.getCurrTime(),
+    }).then(() => {
+      update();
     });
   };
-
 
   // EXPORTABLE TO BE USED WHILE DELETING CHILD FILES IN STORAGE SERVICE
   const getParentFolder = () => {
@@ -149,24 +150,23 @@ const UploadModal = (props) => {
     // console.log(`/files/${currentUser.uid}/${filePath}`);
     const fileref = ref(storage, `files/${currentUser.uid}/${filePath}`);
 
-    console.log(fileref);
     const uploadTask = uploadBytesResumable(fileref, file);
     uploadTask.on(
       "state_changed",
       (snapshot) => {
-        // const progress =
-        //   (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        // console.log("Upload is " + progress + "% done");
-        // switch (snapshot.state) {
-        //   case "paused":
-        //     console.log("Upload is paused");
-        //     break;
-        //   case "running":
-        //     console.log("Upload is running");
-        //     break;
-        //   default:
-        //     console.log("first");
-        // }
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log("Upload is " + progress + "% done");
+        switch (snapshot.state) {
+          case "paused":
+            console.log("Upload is paused");
+            break;
+          case "running":
+            console.log("Upload is running");
+            break;
+          default:
+            console.log("first");
+        }
       },
       (error) => {},
       () => {
@@ -181,23 +181,24 @@ const UploadModal = (props) => {
             // Hall of shame fileref: "files/" + currentUser.uid + "/" + filePath,
             createdAt: database.getCurrTime(),
           }).then(() => {
-            updateStorage("add", file.size, currentUser.uid);
+            updateStorage("add", file.size, currentUser.uid).then(() => {
+              update();
+            });
           });
         });
       }
     );
   };
-
   const confirmUpload = async (action) => {
+    let uploadPromise;
     if (selected === "file") {
-      uploadFile();
+      uploadPromise = uploadFile();
     } else if (selected === "folder") {
-      uploadFolder();
+      uploadPromise = uploadFolder();
     }
     action();
-    await sleep(3000); // Sleep for 2 seconds
     resetModal();
-    update();
+    await uploadPromise;
   };
 
   return (

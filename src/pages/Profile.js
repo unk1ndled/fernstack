@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import NavUser from "../componenets/NavUser";
 import {
@@ -19,18 +19,36 @@ import { useAuth } from "../contexts/AuthContext";
 
 import LoginRequired from "../componenets/LoginRequired";
 import ProfileModal from "../componenets/ProfileModal";
+import { getusedstorage } from "../functions/getusedstorage";
+import { sleep } from "../functions/sleep";
+import { getmaxstorage } from "../functions/getmaxstorage";
 
 const Profile = () => {
   const { currentUser } = useAuth();
   const [visible, setVisible] = useState(false);
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [value, setValue] = useState(0);
+  const [usedStorage, setUsedStorage] = useState(0);
 
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const Upload = () => {
     onOpen();
     // console.log("hi");
     //setLoading(true);
   };
+
+  useEffect(() => {
+    const initused = async () => {
+      setUsedStorage(await getusedstorage(currentUser.uid));
+    };
+    sleep(500).then(() => {
+      initused();
+    });
+  }, [currentUser]);
+
+  useEffect(() => {
+    setValue((usedStorage / getmaxstorage()) * 100);
+  }, [usedStorage]);
 
   const reRenderBod = () => {
     window.location.reload();
@@ -59,9 +77,8 @@ const Profile = () => {
                 />
               </Tooltip>
               <ProfileModal
-                isOpen={isOpen} // Pass isOpen state
-                onOpenChange={onOpenChange} // Pass onOpenChange function
-                // stopLoading={setLoading}
+                isOpen={isOpen}
+                onOpenChange={onOpenChange}
                 update={reRenderBod}
               ></ProfileModal>
               <Spacer y={3} />
@@ -80,6 +97,7 @@ const Profile = () => {
             <Spacer x={1} />
             <div className="flex flex-col gap-10 w-7/12">
               <Card className=" h-unit-72 ">
+                
                 <CardBody className="justify-center items-center pb-0">
                   <CircularProgress
                     classNames={{
@@ -88,7 +106,7 @@ const Profile = () => {
                       track: "stroke-secondary/10",
                       value: "text-3xl font-semibold text-secondary",
                     }}
-                    value={70}
+                    value={value}
                     strokeWidth={4}
                     showValueLabel={true}
                   />
@@ -101,7 +119,7 @@ const Profile = () => {
                     }}
                     variant="bordered"
                   >
-                    160 mb used
+                    {usedStorage} bytes used
                   </Chip>
                 </CardFooter>
               </Card>

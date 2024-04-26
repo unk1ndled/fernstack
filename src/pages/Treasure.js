@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import File from "../componenets/File";
 import Nav from "../componenets/NavUser";
+import { sleep } from "../functions/sleep";
 import Folder from "../componenets/Folder";
 import { useEffect, useState } from "react";
 import { useFolder } from "../hooks/useFolder";
@@ -11,36 +12,23 @@ import BreadCrumb from "../componenets/BreadCrumb";
 import UploadModal from "../componenets/UploadModal";
 import UploadButton from "../componenets/UploadButton";
 import LoginRequired from "../componenets/LoginRequired";
-import { Divider, Progress, Spacer, useDisclosure } from "@nextui-org/react";
 import { getmaxstorage } from "../functions/getmaxstorage";
 import { getusedstorage } from "../functions/getusedstorage";
-import { sleep } from "../functions/sleep";
+import { Divider, Progress, Spacer, useDisclosure } from "@nextui-org/react";
 
 const Treasure = () => {
   const [value, setValue] = useState(0);
   const [usedStorage, setUsedStorage] = useState(0);
-
   const [isLoading, setLoading] = useState(false);
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const { currentUser } = useAuth();
   const { state: folder_ } = useLocation();
   const id_ = folder_ != null ? folder_.folder.id : null;
   const currentFolder = useFolder(id_, folder_);
-  // const [fullPath, setFullPath] = useState("");
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const folder = currentFolder.folder;
-
-  // useEffect(() => {
-  //   if (folder && folder.path) {
-  //     const newPath = `${currentUser.uid}/${folder.path
-  //       .map((item) => item.name)
-  //       .join("/")}/${folder.id}`;
-
-  //     setFullPath(newPath);
-  //     console.log(fullPath);
-  //   }
-  // }, [folder]);
+  const refresh = currentFolder.refreshChildren;
 
   useEffect(() => {
     const initused = async () => {
@@ -52,7 +40,8 @@ const Treasure = () => {
   }, [currentUser]);
 
   const reRenderBod = () => {
-    window.location.reload();
+    refresh();
+    setLoading(false);
   };
   const Upload = () => {
     onOpen();

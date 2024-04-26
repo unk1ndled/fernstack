@@ -12,9 +12,8 @@ import UploadModal from "../componenets/UploadModal";
 import UploadButton from "../componenets/UploadButton";
 import LoginRequired from "../componenets/LoginRequired";
 import { Divider, Progress, Spacer, useDisclosure } from "@nextui-org/react";
-import useStorage from "../hooks/useStorage";
 import { getmaxstorage } from "../functions/getmaxstorage";
-import { getusedstorage } from "../functions/updatestorage";
+import { getusedstorage } from "../functions/getusedstorage";
 import { sleep } from "../functions/sleep";
 
 const Treasure = () => {

@@ -96,8 +96,10 @@ const UploadModal = (props) => {
   //Locally uploading the folder
   const handleFileLocalUpload = (event) => {
     const file = event.target.files[0];
-    setFileName(file.name);
-    setFile(file);
+    if (file !== undefined) {
+      setFileName(file.name);
+      setFile(file);
+    }
   };
 
   //cancel
@@ -136,10 +138,6 @@ const UploadModal = (props) => {
 
   const uploadFile = async () => {
     if (file === null) return;
-    if (file.size > MAX_UPLOAD_SIZE) {
-      alert("file too big");
-      return;
-    }
     const UNIQUE_FILENAME = v4() + file.name;
     const filePath =
       currentFolder === ROOT_FOLDER
@@ -182,6 +180,10 @@ const UploadModal = (props) => {
     if (fileName !== "" || folderName !== "") {
       let uploadPromise;
       if (selected === "file") {
+        if (file.size > MAX_UPLOAD_SIZE) {
+          alert("file too big");
+          return;
+        }
         uploadPromise = uploadFile();
       } else if (selected === "folder") {
         uploadPromise = uploadFolder();

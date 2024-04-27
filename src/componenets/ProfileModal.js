@@ -21,10 +21,9 @@ import { useAuth } from "../contexts/AuthContext";
 
 export default function ProfileModal(props) {
   const { children, stopLoading, update, ...otherProps } = props;
-  const [fileName, setFileName] = useState("");
+  const { currentUser, updateUsername, updatePhotoUrl } = useAuth();
   const [newUsername, setNewUsername] = useState("");
   const [file, setFile] = useState(null);
-  const { currentUser, updateUsername, updatePhotoUrl } = useAuth();
 
   // console.log(currentUser);
 
@@ -38,7 +37,6 @@ export default function ProfileModal(props) {
     try {
       const fileref = ref(storage, `/pfp/${currentUser.uid}`);
       const listResult = await listAll(fileref);
-
       if (listResult.items.length > 0) {
         const itemToDelete = listResult.items[0];
         await deleteObject(itemToDelete);
@@ -52,17 +50,21 @@ export default function ProfileModal(props) {
       console.error(error);
     }
   };
-
   const confirmUpload = async (action) => {
-    if (file && file.type.startsWith("image/")) {
-      await uploadFile();
-    } else {
-      file && alert("Enter a Valid image format");
-    }
+    let func1 = async () => {};
+    let func2 = async () => {};
 
-    if (newUsername !== "") {
-      await updateUsername(newUsername);
+    if (file && file.type.startsWith("image/")) {
+      func1 = uploadFile;
+    } else if (file) {
+      alert("Enter a Valid image format");
     }
+    if (newUsername !== "") {
+      func2 = () => updateUsername(newUsername);
+    }
+    await func1();
+    await func2();
+
     action();
     window.location.reload();
   };

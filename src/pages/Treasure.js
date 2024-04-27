@@ -57,7 +57,7 @@ const Treasure = () => {
   }, [usedStorage]);
 
   return (
-    <div>
+    <div >
       {currentUser.uid ? (
         <>
           <Nav></Nav>
@@ -111,6 +111,7 @@ const Treasure = () => {
                   {currentFolder &&
                     currentFolder.childFolders.map((item, index) => (
                       <Folder
+                      
                         key={index}
                         folder={item}
                         update={refreshChildren}

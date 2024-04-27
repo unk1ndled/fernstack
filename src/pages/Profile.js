@@ -17,6 +17,7 @@ import React, { useEffect } from "react";
 import { sleep } from "../functions/sleep";
 import NavUser from "../componenets/NavUser";
 import { useAuth } from "../contexts/AuthContext";
+import { formatSize } from "../functions/formatSize";
 import ProfileModal from "../componenets/ProfileModal";
 import LoginRequired from "../componenets/LoginRequired";
 import { getmaxstorage } from "../functions/getmaxstorage";
@@ -32,8 +33,6 @@ const Profile = () => {
 
   const Upload = () => {
     onOpen();
-    // console.log("hi");
-    //setLoading(true);
   };
 
   useEffect(() => {
@@ -63,18 +62,16 @@ const Profile = () => {
             <div className="text-3xl font-mono text-secondary flex flex-col items-center w-80  ">
               <div className="text-neutral-600">Hi again</div>
               <Spacer y={3} />
-              <Tooltip placement="bottom" content="update name">
-                <Image
-                  isPressable
-                  radius="full"
-                  className=" h-80  object-cover"
-                  src={
-                    currentUser && currentUser.photoURL
-                      ? currentUser.photoURL
-                      : Pfp
-                  }
-                />
-              </Tooltip>
+              <Image
+                isPressable
+                radius="full"
+                className=" h-80  object-cover"
+                src={
+                  currentUser && currentUser.photoURL
+                    ? currentUser.photoURL
+                    : Pfp
+                }
+              />
               <ProfileModal
                 isOpen={isOpen}
                 onOpenChange={onOpenChange}
@@ -117,7 +114,7 @@ const Profile = () => {
                     }}
                     variant="bordered"
                   >
-                    {Math.floor(usedStorage/1024)} kilo bytes used
+                    {formatSize(usedStorage)} used out of 200 MB
                   </Chip>
                 </CardFooter>
               </Card>

@@ -65,7 +65,6 @@ const Folder = ({ folder, update }) => {
     const link = `http://localhost:3000/treasure/${folder.id}`;
     navigator.clipboard.writeText(link);
     alert("Link copied to clipboard: ");
-
   };
 
   const delDoc = async () => {
@@ -83,8 +82,8 @@ const Folder = ({ folder, update }) => {
     <Dropdown>
       <DropdownTrigger>
         <Card shadow="sm" isPressable>
-          <CardHeader className="text-small justify-between">
-            <b>{folder.name}</b>
+          <CardHeader className="text-small flex items-center justify-center ">
+            <b className="max-w-24 truncate ">{folder.name}</b>
             <p className="text-default-500">{folder.size}</p>
           </CardHeader>
           <CardBody className="overflow-visible p-0">

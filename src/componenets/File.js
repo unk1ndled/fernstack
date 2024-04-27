@@ -106,16 +106,23 @@ const File = ({ file, currentFolder, update }) => {
             />
           </CardBody>
           <CardFooter className="flex gap-2 text-sm justify-evenly">
-            <b className="max-w-12 overflow-hidden">
+            <b className="max-w-20 overflow-hidden">
               <MarqueeContainer>{file.name}</MarqueeContainer>
             </b>
             <p className="text-default-500 text-nowrap">{file.formattedSize}</p>
           </CardFooter>
         </Card>
       </DropdownTrigger>
-      <DropdownMenu variant="faded" aria-label="Dropdown menu with description">
+      <DropdownMenu  variant="faded" aria-label="Dropdown menu with description">
+        <DropdownSection title="Info" showDivider>
+          <DropdownItem key="name" isDisabled>
+            name : {file.name}
+          </DropdownItem>
+          <DropdownItem key="size" isDisabled>
+            size : {file.size} bytes
+          </DropdownItem>
+        </DropdownSection>
         <DropdownSection title="Actions" showDivider>
-          <DropdownItem key="open">Open file</DropdownItem>
           <DropdownItem key="copy" description="Copy the file link">
             Copy link
           </DropdownItem>

@@ -14,34 +14,17 @@ import {
   Select,
   SelectItem,
 } from "@nextui-org/react";
-
 import { database, storage } from "../config/firebase";
-import {
-  getDownloadURL,
-  ref,
-  uploadBytes,
-  uploadBytesResumable,
-} from "firebase/storage";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
 import { v4 } from "uuid";
 
-import {
-  addDoc,
-  getDocs,
-  query,
-  updateDoc,
-  where,
-  writeBatch,
-} from "firebase/firestore";
+import { addDoc } from "firebase/firestore";
 
 import { useAuth } from "../contexts/AuthContext";
-
 import { ROOT_FOLDER } from "../hooks/useFolder";
-import { sleep } from "../functions/sleep";
 import { updateStorage } from "../functions/updatestorage";
-import { getmaxstorage } from "../functions/getmaxstorage";
-import useStorage from "../hooks/useStorage";
-import { FaP } from "react-icons/fa6";
+import { formatSize } from "../functions/formatSize";
 
 const types = [
   {
@@ -79,6 +62,8 @@ const UploadModal = (props) => {
   const [fileName, setFileName] = React.useState("");
   const [folderName, setFolderName] = React.useState("");
   const [fileType, setFileType] = React.useState("textfiles");
+  const [formattedSize, setFormattedSize] = React.useState(null);
+
   const [file, setFile] = React.useState(null);
   const { currentUser } = useAuth();
 
@@ -96,6 +81,12 @@ const UploadModal = (props) => {
       setFile(updatedFile);
     }
   }, [fileName]);
+
+  useEffect(() => {
+    if (file !== null) {
+      setFormattedSize(formatSize(file.size));
+    }
+  }, [file]);
 
   //selecting file type
   const handleSelectionChange = (e) => {
@@ -186,6 +177,7 @@ const UploadModal = (props) => {
             folderId: currentFolder.id,
             userId: currentUser.uid,
             size: file.size,
+            formattedSize: formattedSize,
             type: fileType,
             // Hall of shame fileref: "files/" + currentUser.uid + "/" + filePath,
             createdAt: database.getCurrTime(),

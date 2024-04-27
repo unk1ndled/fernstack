@@ -14,7 +14,6 @@ import UploadModal from "../componenets/UploadModal";
 import UploadButton from "../componenets/UploadButton";
 import LoginRequired from "../componenets/LoginRequired";
 import { getmaxstorage } from "../functions/getmaxstorage";
-import { updateStorage } from "../functions/updatestorage";
 import { getusedstorage } from "../functions/getusedstorage";
 import { Divider, Progress, Spacer, useDisclosure } from "@nextui-org/react";
 

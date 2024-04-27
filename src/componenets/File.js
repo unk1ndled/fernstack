@@ -28,6 +28,7 @@ const File = ({ file, currentFolder, update }) => {
   const [pic, setPic] = useState();
   const { currentUser } = useAuth();
 
+
   useEffect(() => {
     switch (file.type) {
       case "images":
@@ -63,28 +64,23 @@ const File = ({ file, currentFolder, update }) => {
 
   const downloadFile = async () => {
     try {
-
       const xhr = new XMLHttpRequest();
       xhr.responseType = "blob";
 
       xhr.onload = (event) => {
         const blob = xhr.response;
-
         // Create a temporary URL for the blob
         const url = window.URL.createObjectURL(blob);
-
         // Create a temporary anchor element
         const link = document.createElement("a");
         link.href = url;
         link.download = file.name;
         document.body.appendChild(link);
         link.click();
-
         // Clean up
         document.body.removeChild(link);
         window.URL.revokeObjectURL(url);
       };
-
       // Open the XMLHttpRequest with the file URL
       xhr.open("GET", file.url);
 
@@ -94,8 +90,6 @@ const File = ({ file, currentFolder, update }) => {
       console.error("Error downloading file : ", error);
     }
   };
-
-
 
   return (
     <Dropdown backdrop="blur">
@@ -112,25 +106,8 @@ const File = ({ file, currentFolder, update }) => {
             />
           </CardBody>
           <CardFooter className="text-sm justify-evenly">
-            <b
-              style={{
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {file.name}
-            </b>
-            <p
-              style={{
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-              className="text-default-500"
-            >
-              {Math.floor(file.size / KILO_BYTE)} kb
-            </p>
+            <b className="max-w-16 text-nowrap overflow-clip">{file.name}</b>
+            <p className="text-default-500">{file.formattedSize}</p>
           </CardFooter>
         </Card>
       </DropdownTrigger>

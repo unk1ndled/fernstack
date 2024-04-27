@@ -41,6 +41,7 @@ function reducer(state, { type, payload }) {
   }
 }
 
+//TODO add realtime data listening 
 export function useFolder(folderId = null, folder = null) {
   const [state, dispatch] = useReducer(reducer, {
     folderId,

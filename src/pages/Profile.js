@@ -117,7 +117,7 @@ const Profile = () => {
                     }}
                     variant="bordered"
                   >
-                    {usedStorage} bytes used
+                    {Math.floor(usedStorage/1024)} kilo bytes used
                   </Chip>
                 </CardFooter>
               </Card>

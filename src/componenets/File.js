@@ -4,7 +4,7 @@ import Doc from "../images/file.svg";
 import Pdf from "../images/pdf.svg";
 import Video from "../images/video.svg";
 import { database, storage } from "../config/firebase";
-import { getStorage, ref, deleteObject } from "firebase/storage";
+import { getStorage, ref, deleteObject,getBytes } from "firebase/storage";
 import { doc, deleteDoc } from "firebase/firestore";
 
 import { ROOT_FOLDER } from "../hooks/useFolder";
@@ -43,8 +43,6 @@ const File = ({ file, currentFolder, update }) => {
     }
   }, [file]);
 
-  
-
   const deleteFile = async () => {
     try {
       await deleteDoc(doc(database.files, file.id));
@@ -62,6 +60,39 @@ const File = ({ file, currentFolder, update }) => {
     }
   };
 
+  const downloadFile = async () => {
+    try {
+
+      const xhr = new XMLHttpRequest();
+      xhr.responseType = "blob";
+
+      xhr.onload = (event) => {
+        const blob = xhr.response;
+
+        // Create a temporary URL for the blob
+        const url = window.URL.createObjectURL(blob);
+
+        // Create a temporary anchor element
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = file.name;
+        document.body.appendChild(link);
+        link.click();
+
+        // Clean up
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      };
+
+      // Open the XMLHttpRequest with the file URL
+      xhr.open("GET", file.url);
+
+      // Send the XMLHttpRequest to initiate the download
+      xhr.send();
+    } catch (error) {
+      console.error("Error downloading file : ", error);
+    }
+  };
 
 
 
@@ -108,7 +139,11 @@ const File = ({ file, currentFolder, update }) => {
           <DropdownItem key="copy" description="Copy the file link">
             Copy link
           </DropdownItem>
-          <DropdownItem key="download" description="">
+          <DropdownItem
+            key="download"
+            description=""
+            onPress={() => downloadFile()}
+          >
             Download File
           </DropdownItem>
         </DropdownSection>

@@ -13,38 +13,56 @@ import {
 } from "@nextui-org/react";
 
 import { deleteDoc, getDocs, query, where } from "firebase/firestore";
-import { storage } from "../config/firebase";
-import { useAuth } from "../contexts/AuthContext";
-
-import { database } from "../config/firebase";
-import { ref } from "firebase/storage";
+import { database, storage } from "../config/firebase";
 
 import FolderIcon from "../images/frefolder.svg";
 import { useNavigate } from "react-router-dom";
 import { sleep } from "../functions/sleep";
+import { deleteObject, ref } from "firebase/storage";
+import { updateStorage } from "../functions/updatestorage";
+import { useAuth } from "../contexts/AuthContext";
 
 const Folder = ({ folder, update }) => {
-  const [del, setDel] = useState(false);
-
   const navigate = useNavigate();
+  const { currentUser } = useAuth();
 
   const openFolder = () => {
     navigate("/treasure/" + folder.id, { state: { folder: folder } });
   };
 
   const deleteFolderAndSubFolders = async (fId) => {
+    let freedstorage = 0;
+
+    //recursive folder deletion
     const q = query(database.folders, where("parentId", "==", fId));
     const querySnapshot = await getDocs(q);
-    querySnapshot.forEach(async (subfolderDoc) => {
-      const subfolderId = subfolderDoc.id;
-      await deleteFolderAndSubFolders(subfolderId);
-    });
-    //FILES
-    deleteDoc(await database.getFolderRef(fId));
+
+    for (const subfolderDoc of querySnapshot.docs) {
+      freedstorage += await deleteFolderAndSubFolders(subfolderDoc.id);
+    }
+
+    //file deletion
+    const files = query(database.files, where("folderId", "==", fId));
+    const filequerySnapshot = await getDocs(files);
+
+    for (const file of filequerySnapshot.docs) {
+      try {
+        const formattedFile = database.formatDoc(file);
+        await deleteDoc(database.getFileRef(formattedFile.id));
+        const storageFileRef = ref(storage, formattedFile.url);
+        await deleteObject(storageFileRef);
+        freedstorage += formattedFile.size;
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    deleteDoc(database.getFolderRef(fId));
+    return freedstorage;
   };
 
   const shareFolder = () => {
-     const link = `http://localhost:3000/treasure/${folder.id}`;
+    const link = `http://localhost:3000/treasure/${folder.id}`;
     navigator.clipboard.writeText(link);
     alert("Link copied to clipboard: ");
 
@@ -60,9 +78,10 @@ const Folder = ({ folder, update }) => {
 
   const delDoc = async () => {
     try {
-      await deleteFolderAndSubFolders(folder.id);
-      await sleep(500);
-      update();
+      const freed = await deleteFolderAndSubFolders(folder.id);
+      updateStorage("subtract", freed, currentUser.uid).then(() => {
+        update();
+      });
     } catch (error) {
       alert(error);
     }

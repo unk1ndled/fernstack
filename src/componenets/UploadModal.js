@@ -41,6 +41,7 @@ import { sleep } from "../functions/sleep";
 import { updateStorage } from "../functions/updatestorage";
 import { getmaxstorage } from "../functions/getmaxstorage";
 import useStorage from "../hooks/useStorage";
+import { FaP } from "react-icons/fa6";
 
 const types = [
   {
@@ -62,10 +63,18 @@ const types = [
 ];
 
 //2mb
-const MAX_UPLOAD_SIZE = Math.floor(getmaxstorage / 10);
+const MAX_UPLOAD_SIZE = 10 * 1024 * 1024;
 
 const UploadModal = (props) => {
-  const { children, stopLoading, currentFolder, update, ...otherProps } = props;
+  const {
+    children,
+    setUploadProgress,
+    stopLoading,
+    currentFolder,
+    setShowUpload,
+    update,
+    ...otherProps
+  } = props;
   const [selected, setSelected] = React.useState("");
   const [fileName, setFileName] = React.useState("");
   const [folderName, setFolderName] = React.useState("");
@@ -121,11 +130,11 @@ const UploadModal = (props) => {
       userId: currentUser.uid,
       path: path,
       createdAt: database.getCurrTime(),
+    }).then(() => {
+      update();
     });
   };
 
-
-  // EXPORTABLE TO BE USED WHILE DELETING CHILD FILES IN STORAGE SERVICE
   const getParentFolder = () => {
     if (currentFolder.path.length > 0) {
       return `${currentFolder.path.map((entry) => entry.name).join("/")}/`;
@@ -149,14 +158,14 @@ const UploadModal = (props) => {
     // console.log(`/files/${currentUser.uid}/${filePath}`);
     const fileref = ref(storage, `files/${currentUser.uid}/${filePath}`);
 
-    console.log(fileref);
     const uploadTask = uploadBytesResumable(fileref, file);
     uploadTask.on(
       "state_changed",
       (snapshot) => {
-        // const progress =
-        //   (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        // console.log("Upload is " + progress + "% done");
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        //toast progress
+        setUploadProgress(progress);
         // switch (snapshot.state) {
         //   case "paused":
         //     console.log("Upload is paused");
@@ -181,23 +190,28 @@ const UploadModal = (props) => {
             // Hall of shame fileref: "files/" + currentUser.uid + "/" + filePath,
             createdAt: database.getCurrTime(),
           }).then(() => {
-            updateStorage("add", file.size, currentUser.uid);
+            updateStorage("add", file.size, currentUser.uid).then(() => {
+              update();
+            });
           });
         });
       }
     );
   };
-
   const confirmUpload = async (action) => {
-    if (selected === "file") {
-      uploadFile();
-    } else if (selected === "folder") {
-      uploadFolder();
+    //the user has to pick something to upload first
+    if (fileName !== "" || folderName !== "") {
+      let uploadPromise;
+      if (selected === "file") {
+        uploadPromise = uploadFile();
+      } else if (selected === "folder") {
+        uploadPromise = uploadFolder();
+      }
+      action();
+      setShowUpload(true);
+      resetModal();
+      await uploadPromise;
     }
-    action();
-    await sleep(3000); // Sleep for 2 seconds
-    resetModal();
-    update();
   };
 
   return (

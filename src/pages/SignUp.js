@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import styled from "styled-components";
 import { Divider, Input, Button } from "@nextui-org/react";
 import { EyeFilledIcon } from "../utils/EyeFilledIcon ";
@@ -6,9 +6,7 @@ import { EyeSlashFilledIcon } from "../utils/EyeSlashFilledIcon ";
 import { FcGoogle } from "react-icons/fc";
 import Icon from "../images/logo.svg";
 import { Link, useNavigate } from "react-router-dom";
-// import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useAuth } from "../contexts/AuthContext";
-import { database } from "../config/firebase";
 
 const SignUp = () => {
   const [isVisible, setIsVisible] = useState(false);

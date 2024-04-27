@@ -1,14 +1,12 @@
-import React, { useState, useRef, useEffect } from "react";
-import styled from "styled-components";
-import { Divider, Input, Button } from "@nextui-org/react";
-import { EyeFilledIcon } from "../utils/EyeFilledIcon ";
-import { EyeSlashFilledIcon } from "../utils/EyeSlashFilledIcon ";
-import { FcGoogle } from "react-icons/fc";
 import Icon from "../images/logo.svg";
-import { auth, googleProvider } from "../config/firebase";
-// import { createUserWithEmailAndPassword } from "firebase/auth";
+import styled from "styled-components";
+import { FcGoogle } from "react-icons/fc";
+import React, { useState, useRef } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
+import { EyeFilledIcon } from "../utils/EyeFilledIcon ";
+import { Divider, Input, Button } from "@nextui-org/react";
+import { EyeSlashFilledIcon } from "../utils/EyeSlashFilledIcon ";
 
 const Login = () => {
   const [isVisible, setIsVisible] = useState(false);

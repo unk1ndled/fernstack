@@ -32,17 +32,19 @@ export const database = {
   files: collection(db, "files"),
   users: collection(db, "users"),
 
-  getFolderRef: async (id) => {
+  getFolderRef:  (id) => {
     return doc(db, "folders", id);
   },
 
-  getFileRef: async (id) => {
+  getFileRef:  (id) => {
     return doc(db, "files", id);
   },
 
-  getUserRef: async (id) => {
+  getUserRef:  (id) => {
     return doc(db, "users", id);
   },
+
+
   
   initUserDoc: async (uid) => {
     addDoc(database.users, {

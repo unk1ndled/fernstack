@@ -10,10 +10,10 @@ import {
 } from "@nextui-org/react";
 import {
   ref,
-  uploadBytesResumable,
   uploadBytes,
   getDownloadURL,
   deleteObject,
+  listAll,
 } from "firebase/storage";
 import { database, storage } from "../config/firebase";
 
@@ -37,25 +37,31 @@ export default function ProfileModal(props) {
   const uploadFile = async () => {
     try {
       const fileref = ref(storage, `/pfp/${currentUser.uid}`);
-      deleteObject(fileref);
+      const listResult = await listAll(fileref);
+
+      if (listResult.items.length > 0) {
+        const itemToDelete = listResult.items[0];
+        await deleteObject(itemToDelete);
+        console.log("File deleted successfully.");
+      }
       const uploadTask = uploadBytes(fileref, file);
       const snapshot = await uploadTask;
       const downloadURL = await getDownloadURL(snapshot.ref);
       updatePhotoUrl(downloadURL);
     } catch (error) {
-      console.error("Error uploading file:", error);
+      console.error(error);
     }
   };
 
-  const confirmUpload = (action) => {
-    if (file && file.type.statsWith("image/")) {
-      uploadFile();
+  const confirmUpload = async (action) => {
+    if (file && file.type.startsWith("image/")) {
+      await uploadFile();
     } else {
-      alert("Enter a Valid image format");
+      file && alert("Enter a Valid image format");
     }
 
     if (newUsername !== "") {
-      updateUsername(newUsername);
+      await updateUsername(newUsername);
     }
     action();
     window.location.reload();

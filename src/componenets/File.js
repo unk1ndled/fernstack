@@ -61,6 +61,42 @@ const File = ({ file, currentFolder, update }) => {
     }
   };
 
+  const downloadFile = async () => {
+    try {
+
+      const xhr = new XMLHttpRequest();
+      xhr.responseType = "blob";
+
+      xhr.onload = (event) => {
+        const blob = xhr.response;
+
+        // Create a temporary URL for the blob
+        const url = window.URL.createObjectURL(blob);
+
+        // Create a temporary anchor element
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = file.name;
+        document.body.appendChild(link);
+        link.click();
+
+        // Clean up
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      };
+
+      // Open the XMLHttpRequest with the file URL
+      xhr.open("GET", file.url);
+
+      // Send the XMLHttpRequest to initiate the download
+      xhr.send();
+    } catch (error) {
+      console.error("Error downloading file : ", error);
+    }
+  };
+
+
+
   return (
     <Dropdown backdrop="blur">
       <DropdownTrigger>
@@ -104,7 +140,11 @@ const File = ({ file, currentFolder, update }) => {
           <DropdownItem key="copy" description="Copy the file link">
             Copy link
           </DropdownItem>
-          <DropdownItem key="download" description="">
+          <DropdownItem
+            key="download"
+            description=""
+            onPress={() => downloadFile()}
+          >
             Download File
           </DropdownItem>
         </DropdownSection>

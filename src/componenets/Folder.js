@@ -66,14 +66,6 @@ const Folder = ({ folder, update }) => {
     navigator.clipboard.writeText(link);
     alert("Link copied to clipboard: ");
 
-    //ref f storage
-
-    // const folderRef = ref(
-    //   storage,
-    //   `/files/${currentUser.uid}/${folder.path
-    //     .map((entry) => entry.name)
-    //     .join("/")}/${folder.name}`
-    // );
   };
 
   const delDoc = async () => {

@@ -145,10 +145,7 @@ const UploadModal = (props) => {
       currentFolder === ROOT_FOLDER
         ? `${UNIQUE_FILENAME}`
         : `${getParentFolder()}${currentFolder.name}/${UNIQUE_FILENAME}`;
-
-    // console.log(`/files/${currentUser.uid}/${filePath}`);
     const fileref = ref(storage, `files/${currentUser.uid}/${filePath}`);
-
     const uploadTask = uploadBytesResumable(fileref, file);
     uploadTask.on(
       "state_changed",
@@ -157,16 +154,6 @@ const UploadModal = (props) => {
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         //toast progress
         setUploadProgress(progress);
-        // switch (snapshot.state) {
-        //   case "paused":
-        //     console.log("Upload is paused");
-        //     break;
-        //   case "running":
-        //     console.log("Upload is running");
-        //     break;
-        //   default:
-        //     console.log("first");
-        // }
       },
       (error) => {},
       () => {

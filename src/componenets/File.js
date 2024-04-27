@@ -21,13 +21,13 @@ import {
 import { Hand } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { updateStorage } from "../functions/updatestorage";
+import styled, { keyframes } from "styled-components";
 
 const KILO_BYTE = 1024;
 
 const File = ({ file, currentFolder, update }) => {
   const [pic, setPic] = useState();
   const { currentUser } = useAuth();
-
 
   useEffect(() => {
     switch (file.type) {
@@ -105,9 +105,11 @@ const File = ({ file, currentFolder, update }) => {
               src={pic}
             />
           </CardBody>
-          <CardFooter className="text-sm justify-evenly">
-            <b className="max-w-16 text-nowrap overflow-clip">{file.name}</b>
-            <p className="text-default-500">{file.formattedSize}</p>
+          <CardFooter className="flex gap-2 text-sm justify-evenly">
+            <b className="max-w-12 overflow-hidden">
+              <MarqueeContainer>{file.name}</MarqueeContainer>
+            </b>
+            <p className="text-default-500 text-nowrap">{file.formattedSize}</p>
           </CardFooter>
         </Card>
       </DropdownTrigger>
@@ -140,5 +142,20 @@ const File = ({ file, currentFolder, update }) => {
     </Dropdown>
   );
 };
+
+const MarqueeAnimation = keyframes`
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+`;
+
+const MarqueeContainer = styled.div`
+  display: inline-block;
+  white-space: nowrap;
+  animation: ${MarqueeAnimation} 5s linear infinite; /* Adjust duration as needed */
+`;
 
 export default File;

@@ -1,13 +1,11 @@
+import { getStorage, ref, deleteObject } from "firebase/storage";
+import { database, storage } from "../config/firebase";
+import { doc, deleteDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import Coffre from "../images/Coffre.gif";
+import Video from "../images/video.svg";
 import Doc from "../images/file.svg";
 import Pdf from "../images/pdf.svg";
-import Video from "../images/video.svg";
-import { database, storage } from "../config/firebase";
-import { getStorage, ref, deleteObject } from "firebase/storage";
-import { doc, deleteDoc } from "firebase/firestore";
-
-import { ROOT_FOLDER } from "../hooks/useFolder";
 
 import {
   Dropdown,

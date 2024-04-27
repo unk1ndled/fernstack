@@ -1,12 +1,12 @@
-import React, { useState, useRef } from "react";
-import styled from "styled-components";
-import { Divider, Input, Button } from "@nextui-org/react";
-import { EyeFilledIcon } from "../utils/EyeFilledIcon ";
-import { EyeSlashFilledIcon } from "../utils/EyeSlashFilledIcon ";
-import { FcGoogle } from "react-icons/fc";
 import Icon from "../images/logo.svg";
-import { Link, useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import { FcGoogle } from "react-icons/fc";
+import React, { useState, useRef } from "react";
 import { useAuth } from "../contexts/AuthContext";
+import { Link, useNavigate } from "react-router-dom";
+import { EyeFilledIcon } from "../utils/EyeFilledIcon ";
+import { Divider, Input, Button } from "@nextui-org/react";
+import { EyeSlashFilledIcon } from "../utils/EyeSlashFilledIcon ";
 
 const SignUp = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -42,8 +42,6 @@ const SignUp = () => {
       setError(error.code);
     }
   }
-
-
 
   const signInWithPopUp = async () => {
     try {

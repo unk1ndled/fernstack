@@ -1,11 +1,11 @@
-import { getDocs, query, where } from "firebase/firestore";
+import { getDocs, onSnapshot, query, where } from "firebase/firestore";
 import { database } from "../config/firebase";
 
 export const getusedstorage = async (uid) => {
   try {
     const storedUsedStorage = localStorage.getItem("usedStorage");
     if (storedUsedStorage != null) {
-      console.log("local")
+      console.log("local");
       return storedUsedStorage;
     }
 
@@ -27,4 +27,14 @@ export const getusedstorage = async (uid) => {
     console.error("Error in getusedstorage:", error);
     return null;
   }
+};
+
+const getRealtimestorage = async (uid) => {
+  let userUsedStorage;
+  const q = query(database.users, where("userId", "==", uid));
+  const unsubscribe = onSnapshot(q, (querySnapshot) => {
+    const userData = querySnapshot.docs[0].data();
+    userUsedStorage = userData.usedStorage;
+  });
+  return { unsubscribe, userUsedStorage };
 };

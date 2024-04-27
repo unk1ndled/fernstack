@@ -1,6 +1,4 @@
-import React, { useEffect } from "react";
 import { useState } from "react";
-import NavUser from "../componenets/NavUser";
 import {
   Spacer,
   Image,
@@ -15,13 +13,14 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 import Pfp from "../images/frerein.jpg";
-import { useAuth } from "../contexts/AuthContext";
-
-import LoginRequired from "../componenets/LoginRequired";
-import ProfileModal from "../componenets/ProfileModal";
-import { getusedstorage } from "../functions/getusedstorage";
+import React, { useEffect } from "react";
 import { sleep } from "../functions/sleep";
+import NavUser from "../componenets/NavUser";
+import { useAuth } from "../contexts/AuthContext";
+import ProfileModal from "../componenets/ProfileModal";
+import LoginRequired from "../componenets/LoginRequired";
 import { getmaxstorage } from "../functions/getmaxstorage";
+import { getusedstorage } from "../functions/getusedstorage";
 
 const Profile = () => {
   const { currentUser } = useAuth();
@@ -97,7 +96,6 @@ const Profile = () => {
             <Spacer x={1} />
             <div className="flex flex-col gap-10 w-7/12">
               <Card className=" h-unit-72 ">
-                
                 <CardBody className="justify-center items-center pb-0">
                   <CircularProgress
                     classNames={{

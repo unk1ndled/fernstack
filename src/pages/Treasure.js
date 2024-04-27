@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import File from "../componenets/File";
 import Nav from "../componenets/NavUser";
+import Toast from "../componenets/Toast";
 import { sleep } from "../functions/sleep";
 import Folder from "../componenets/Folder";
 import { useEffect, useState } from "react";
@@ -15,14 +16,13 @@ import LoginRequired from "../componenets/LoginRequired";
 import { getmaxstorage } from "../functions/getmaxstorage";
 import { getusedstorage } from "../functions/getusedstorage";
 import { Divider, Progress, Spacer, useDisclosure } from "@nextui-org/react";
-import Toast from "../componenets/Toast";
 
 const Treasure = () => {
   const [value, setValue] = useState(0);
-  const [usedStorage, setUsedStorage] = useState(0);
   const [isLoading, setLoading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(-1);
+  const [usedStorage, setUsedStorage] = useState(0);
   const [showUpload, setShowUpload] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(-1);
 
   const { currentUser } = useAuth();
   const { state: folder_ } = useLocation();
@@ -40,7 +40,7 @@ const Treasure = () => {
     sleep(500).then(() => {
       initused();
     });
-  }, [currentUser]);
+  }, []);
 
   const refreshChildren = () => {
     refresh();

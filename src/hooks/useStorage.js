@@ -1,74 +1,31 @@
-// import { useReducer, useEffect } from "react";
-// import { getDocs, query, where } from "firebase/firestore";
+// import { useReducer } from "react";
 
-// import { useAuth } from "../contexts/AuthContext";
-// import { database } from "../config/firebase";
-
-// const actionTypes = {
-//   FETCH_DATA_SUCCESS: "FETCH_DATA_SUCCESS",
-//   FETCH_DATA_ERROR: "FETCH_DATA_ERROR",
+// const ACTIONS = {
+//   INCREASE_STORAGE: "increase-storage",
+//   DECREASE_STORAGE: "decrease-storage",
+//   GET_STORAGE: "get-storage",
 // };
 
-// const reducer = (state, action) => {
-//   switch (action.type) {
-//     case "FETCH_DATA":
-//       return { ...state, loading: true };
-//     case "FETCH_DATA_SUCCESS":
-//       return { ...state, loading: false, data: action.payload };
-//     case "FETCH_DATA_ERROR":
-//       return { ...state, loading: false, error: action.payload };
-//     case "UPDATE_DATA":
-//       return { ...state, data: action.payload };
+// function reducer(state, { type, payload }) {
+//   switch (type) {
+//     case ACTIONS.INCREASE_STORAGE:
+//       return {
+//         userStorage: payload.userStorage,
+//       };
+//     case ACTIONS.DECREASE_STORAGE:
+//       return {
+//         userStorage: payload.userStorage,
+//       };
+//     case ACTIONS.GET_STORAGE:
+//       return {
+//         userStorage: payload.userStorage,
+//       };
 //     default:
 //       return state;
 //   }
+// }
+// export const useStorage = (val = null) => {
+//   const [state, dispatch] = useReducer(reducer, {
+//     userStorage: 0,
+//   });
 // };
-
-// const useStorage = (uid) => {
-//   const initialState = {
-//     data: null,
-//     loading: true,
-//     error: null,
-//   };
-//   const [state, dispatch] = useReducer(reducer, initialState);
-
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         if (state.data) {
-//           dispatch({ type: "FETCH_DATA_SUCCESS", payload: state.data });
-//         }
-//         const querySnapshot = await getDocs(
-//           query(database.users, where("userId", "==", uid))
-//         );
-
-//         if (!querySnapshot.empty) {
-//           const data = querySnapshot.docs[0].data().usedStorage;
-//           dispatch({ type: actionTypes.FETCH_DATA_SUCCESS, payload: data });
-//           console.log("db");
-//         } else {
-//           dispatch({
-//             type: actionTypes.FETCH_DATA_ERROR,
-//             payload: "No data found",
-//           });
-//         }
-//       } catch (error) {
-//         console.log(error);
-//         dispatch({
-//           type: actionTypes.FETCH_DATA_ERROR,
-//           payload: error.message,
-//         });
-//       }
-//     };
-
-//     fetchData();
-//   }, []);
-
-//   const updateData = (newData) => {
-//     dispatch({ type: "UPDATE_DATA", payload: newData });
-//   };
-
-//   return { ...state, updateData };
-// };
-
-// export default useStorage;

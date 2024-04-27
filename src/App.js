@@ -14,6 +14,7 @@ import Profile from "./pages/Profile";
 import Treasure from "./pages/Treasure";
 import Landing from "./pages/Landing";
 import ProfileModal from "./componenets/ProfileModal";
+import Shared from "./pages/Shared";
 
 const App = () => {
   const navigate = useNavigate();
@@ -33,6 +34,9 @@ const App = () => {
           {/* treasure */}
           <Route path="/treasure" element={<Treasure />} />
           <Route path="/treasure/:treasureid" element={<Treasure />} />
+
+          {/* share */}
+          <Route path="/shared/users/:username/folders/:folder" element={<Shared />} />
 
           {/* profile */}
           <Route path="/profile" element={<Profile />} />

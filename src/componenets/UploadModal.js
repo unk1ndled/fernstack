@@ -108,6 +108,7 @@ const UploadModal = (props) => {
     stopLoading();
   };
 
+  
   const uploadFolder = async () => {
     if (currentFolder == null) return;
 

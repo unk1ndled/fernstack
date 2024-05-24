@@ -18,12 +18,10 @@ import {
   Image,
   DropdownSection,
 } from "@nextui-org/react";
-import { Hand } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { updateStorage } from "../functions/updatestorage";
 import styled, { keyframes } from "styled-components";
 
-const KILO_BYTE = 1024;
 
 const File = ({ file, currentFolder, update }) => {
   const [pic, setPic] = useState();
@@ -44,6 +42,10 @@ const File = ({ file, currentFolder, update }) => {
     }
   }, [file]);
 
+  const copyFileLink = ()=>{
+    console.log(file.url)
+  }
+
   const deleteFile = async () => {
     try {
       await deleteDoc(doc(database.files, file.id));
@@ -62,6 +64,7 @@ const File = ({ file, currentFolder, update }) => {
     }
   };
 
+  //avrg gpt generated function
   const downloadFile = async () => {
     try {
       const xhr = new XMLHttpRequest();
@@ -123,7 +126,7 @@ const File = ({ file, currentFolder, update }) => {
           </DropdownItem>
         </DropdownSection>
         <DropdownSection title="Actions" showDivider>
-          <DropdownItem key="copy" description="Copy the file link">
+          <DropdownItem key="copy" description="Copy the file link" onPress={()=>{copyFileLink()}}>
             Copy link
           </DropdownItem>
           <DropdownItem

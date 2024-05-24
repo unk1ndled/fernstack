@@ -12,12 +12,12 @@ import {
   Image,
 } from "@nextui-org/react";
 
+import FolderIcon from "../images/frefolder.svg";
+
+
 import { deleteDoc, getDocs, query, where } from "firebase/firestore";
 import { database, storage } from "../config/firebase";
-
-import FolderIcon from "../images/frefolder.svg";
 import { useNavigate } from "react-router-dom";
-import { sleep } from "../functions/sleep";
 import { deleteObject, ref } from "firebase/storage";
 import { updateStorage } from "../functions/updatestorage";
 import { useAuth } from "../contexts/AuthContext";
@@ -62,9 +62,9 @@ const Folder = ({ folder, update }) => {
   };
 
   const shareFolder = () => {
-    const link = `http://localhost:3000/treasure/${folder.id}`;
+    const link = `http://localhost:3000/shared/users/${currentUser.displayName}/folders/${folder.id}`;
     navigator.clipboard.writeText(link);
-    alert("Link copied to clipboard: ");
+    // alert("Link copied to clipboard: ");
   };
 
   const delDoc = async () => {

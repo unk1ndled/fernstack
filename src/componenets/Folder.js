@@ -65,7 +65,7 @@ const Folder = ({ folder, update }) => {
   };
 
   const shareFolder = () => {
-    const link = `http://localhost:3000/shared/users/${currentUser.displayName}/folders/${folder.id}`;
+    const link = `https://fernstack-ec664.web.app/shared/users/${currentUser.displayName}/folders/${folder.id}`;
     navigator.clipboard.writeText(link);
     // alert("Link copied to clipboard: ");
   };

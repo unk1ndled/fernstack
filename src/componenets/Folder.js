@@ -15,7 +15,6 @@ import {
 
 import FolderIcon from "../images/frefolder.svg";
 
-
 import { deleteDoc, getDocs, query, where } from "firebase/firestore";
 import { database, storage } from "../config/firebase";
 import { useNavigate } from "react-router-dom";
@@ -142,15 +141,15 @@ const Folder = ({ folder, update }) => {
               Rename
             </DropdownItem>
 
-            {/* <DropdownItem
-  key="copy"
-  description="Copy the Folder link"
-  onPress={() => {
-    shareFolder();
-  }}
->
-  Copy link
-</DropdownItem> */}
+            <DropdownItem
+              key="copy"
+              description="Copy the Folder link"
+              onPress={() => {
+                shareFolder();
+              }}
+            >
+              Copy link
+            </DropdownItem>
           </DropdownSection>
           <DropdownSection title="Danger zone">
             <DropdownItem

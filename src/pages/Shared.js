@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import Nav from "../componenets/Nav";
 import Grid from "../componenets/Grid";
 import Icon from "../images/Coffre.gif";
+import { saveAs } from 'file-saver';
+
 import {
   Card,
   CardHeader,
@@ -10,16 +12,42 @@ import {
   Divider,
   Link,
   Image,
+  Button,
 } from "@nextui-org/react";
 import { useLocation } from "react-router-dom";
 import { database } from "../config/firebase";
 import { getDocs, query, where } from "firebase/firestore";
+import JSZip from "jszip";
 
 const Shared = () => {
   const location = useLocation();
   const user = location.pathname.split("/")[3];
   const folderId = location.pathname.split("/")[5];
   const [files, setFiles] = useState();
+
+
+  const downloadFilesAsZip = async (files) => {
+    const zip = new JSZip();
+    for (const file of files) {
+        try {
+            const response = await fetch(file.url);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch ${file.url}: ${response.statusText}`);
+            }
+            const blob = await response.blob();
+            const fileName = file.name
+            zip.file(fileName, blob);
+        } catch (error) {
+            console.error(`Failed to download ${file.url}:`, error);
+            alert(`Failed to download ${file.url}: ${error.message}`);
+            return;
+        }
+    }
+    const content = await zip.generateAsync({ type: "blob" });
+    saveAs(content, `${user}_shared_file.zip`);
+};
+
+
 
   useEffect(() => {
     const fetchitems = async () => {
@@ -52,7 +80,7 @@ const Shared = () => {
                 </p>
               </div>
             </div>
-            <Image className="w-28" radius="sm" src={Icon} />
+            {/* <Image className="w-28" radius="sm" src={Icon} /> */}
           </CardHeader>
           <Divider />
           <CardBody>
@@ -60,19 +88,24 @@ const Shared = () => {
               {files != undefined &&
                 files.map((file, index) => (
                   <div className="flex items-center justify-center hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300  bg-neutral-950 rounded-md  border-neutral-700 border-1 w-[160px] h-[130px]">
-                    <div >
-                      <div>{file.name}</div>
+                    <div className="flex flex-col justify-center items-center font-mono">
+                      <div className="max-w-20 text-nowrap truncate">{file.name}</div>
                       <div>{file.formattedSize}</div>
+                      <div>{file.type}</div>
+
                     </div>
                   </div>
                 ))}
             </div>
           </CardBody>
           <Divider />
-          <CardFooter>
+          <CardFooter className="flex justify-between">
             <Link isExternal showAnchorIcon>
               Discover our service
             </Link>
+            <Button onPress={()=>{downloadFilesAsZip(files)}} color="secondary" variant="faded">
+              download
+            </Button>
           </CardFooter>
         </Card>
       </Grid>

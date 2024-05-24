@@ -20,7 +20,6 @@ import {
   Button,
 } from "@nextui-org/react";
 
-import { Hand } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { updateStorage } from "../functions/updatestorage";
 import styled, { keyframes } from "styled-components";
@@ -35,24 +34,22 @@ const File = ({ file, currentFolder, update }) => {
     switch (file.type) {
       case "images":
         setPic(file.url);
-        break;
+        break
       case "pdfs":
         setPic(Pdf);
-        break;
+        break
       case "textfiles":
         setPic(Doc);
-        break;
+        break
       case "videos":
         setPic(Video);
-        break;
+        break
       default:
         setPic(Coffre);
     }
   }, [file]);
 
-  const copyFileLink = ()=>{
-    console.log(file.url)
-  }
+
 
   const deleteFile = async () => {
     try {
@@ -158,8 +155,8 @@ const File = ({ file, currentFolder, update }) => {
                 src={pic}
               />
             </CardBody>
-            <CardFooter className="flex gap-2 text-sm justify-evenly">
-              <b className="max-w-20 overflow-hidden">
+            <CardFooter className="flex  gap-2 text-sm justify-evenly">
+              <b className="max-w-12 overflow-hidden">
                 <MarqueeContainer>{file.name}</MarqueeContainer>
               </b>
               <p className="text-default-500 text-nowrap">

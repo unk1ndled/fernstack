@@ -140,7 +140,7 @@ const File = ({ file, currentFolder, update }) => {
   };
 
   return (
-    <div>
+    <>
       {showCard && openFileCard()}
       <Dropdown backdrop="blur">
         <DropdownTrigger>
@@ -155,7 +155,7 @@ const File = ({ file, currentFolder, update }) => {
                 src={pic}
               />
             </CardBody>
-            <CardFooter className="flex  gap-2 text-sm justify-evenly">
+            <CardFooter className="flex truncate  gap-2 text-sm justify-evenly">
               <b className="max-w-12 overflow-hidden">
                 <MarqueeContainer>{file.name}</MarqueeContainer>
               </b>
@@ -217,7 +217,7 @@ const File = ({ file, currentFolder, update }) => {
           </DropdownSection>
         </DropdownMenu>
       </Dropdown>
-    </div>
+    </>
   );
 };
 

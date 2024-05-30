@@ -12,9 +12,11 @@ const Grid = ({ children, ...props }) => {
 };
 
 const GridC = styled.div`
-  min-height: 90vh;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   background: #000;
+
   background-image: linear-gradient(
       rgba(155, 155, 255, 0.07) 0.1em,
       transparent 0.1em
@@ -24,9 +26,10 @@ const GridC = styled.div`
 `;
 
 const Wrapper = styled.div`
-  width: 100%;
-  height: 70vh;
   display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
   justify-content: space-evenly;
 `;
 
